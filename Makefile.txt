@@ -1,0 +1,31 @@
+# Makefile for Project Group RuntimeError
+
+ifeq ($(OSTYPE),WINDOWS)
+	EXECEXT =.exe
+	COMP	=__MINGCC__
+	PLATFORM	=mingw
+else
+	EXECEXT =
+	COMP	=__GCC__
+	PLATFORM	=linux
+endif
+
+EXECUTABLES= main$(EXECEXT)
+
+all : $(EXECUTABLES)
+
+main.o :	main.c abstractHashTable.h analyzeMood.h
+	gcc -c main.c
+
+chainedHashTable.o :	chainedHashTable.c abstractHashTable.h
+	gcc -c chainedHashTable.c
+
+analyzeMood.o : analyzeMood.c analyzeMood.h abstractHashTable.h
+	gcc -c analyzeMood.c
+
+main$(EXECEXT) : main.o chainedHashTable.o analyzeMood.o
+	gcc -o main$(EXECEXT) main.o chainedHashTable.o analyzeMood.o
+
+clean : 
+	-rm *.o
+	-rm $(EXECUTABLES) 

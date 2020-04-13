@@ -1,0 +1,7 @@
+happy
+romantic
+calm
+sad
+angry
+violent
+excited
