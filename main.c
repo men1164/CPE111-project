@@ -89,6 +89,8 @@ int main(int argc, const char * argv[]) {
         printf("Welcome to Emotion-based Song Recommender!!\n\n");
         printf("************************************************************\n\n");
         
+        printf("TEST.\n");
+        
         while (1) {
             
             printf("|Main Menu|\n");
