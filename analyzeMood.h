@@ -12,6 +12,8 @@
 #define READ 256
 #define MAXMOODS 10
 #define KEYWORDSLEN 512
+#define WHITE 0
+#define BLACK 1
 
 typedef struct _songInfo {
     char songName[32];

@@ -16,7 +16,6 @@
 #include "abstractHashTable.h"
 
 
-SONG_T *songsList = NULL;
 char saveMood[32];
 char keywordsString[MAXMOODS][KEYWORDSLEN];
 
@@ -67,9 +66,9 @@ void keywordsAnalysis() {
             printf("Error! - Can't open the lyrics file -> '%s'.\n", songName);
             exit(3);
         }
-//        printf("***************");
-//        printf("\n%s\n",songName);
-//        printf("***************\n");
+        printf("***************");
+        printf("\n%s\n",songName);
+        printf("***************\n");
         while (fgets(lyricsArray, fileSize+1, pLyrics) != NULL) {
             
             token = strtok(lyricsArray, " ,.!?:;()&\n\r");
@@ -88,14 +87,14 @@ void keywordsAnalysis() {
             }
         }
         
-//        for (i=0; i<moodList; i++) {
-//            printf("\t%d:Found %d words\n", i+1, keywordsCounts[i]);
-//        }
+        for (i=0; i<moodCount; i++) {
+            printf("\t%d:Found %d words\n", i+1, keywordsCount[i]);
+        }
         
         moodAnalysis(keywordsCount, songName, moodCount);
         fclose(pLyrics);
     }
-    
+    printf("\nItems in hashTable %d.\n",hashTableItemCount());
     fclose(pSongList);
 }
 
@@ -154,18 +153,29 @@ void moodAnalysis(int keywordsFound[], char songName[], int moodCount) {
     
     int dummy = 0;
     int i;
-    
+    int colorMark = WHITE;
+    SONG_T *songsList = NULL;
+    SONG_T *multiMood = NULL;
+
     
     songsList = (SONG_T *) calloc(1, sizeof(SONG_T));
+    strcpy(songsList->songName, songName);
+
     for (i=0; i<moodCount; i++) {
 
         if (keywordsFound[i] > 5) {
             
             findMoodPosition(i);
-            strcpy(songsList->songName, songName);
             strcpy(songsList->mood, saveMood);
-            
             hashTableInsert(songsList->mood, songsList, &dummy);
+            
+//            if (colorMark == WHITE) {
+//
+//                colorMark = BLACK;
+//            }
+//            else {
+//                /*already insert this song, plans to use hashLookup and put in pNext*/
+//            }
         }
     }
 }
@@ -181,6 +191,7 @@ void findMoodPosition(int position) {
     pMoodlist = fopen("Mood/moodList.txt", "r");
     if (pMoodlist == NULL) {
         printf("Error! - Can't open list of mood files.\n");
+        exit(6);
     }
     while (fgets(read, sizeof(read), pMoodlist) != NULL) {
         
