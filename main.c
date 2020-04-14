@@ -14,7 +14,7 @@
 #include "analyzeMood.h"
 #include "abstractHashTable.h"
 
-#define BUCKET_COUNT 5003
+#define BUCKET_COUNT 1003
 
 /* Based on code by Sally Goldin from [hashTester.c]
  * Used with permission.

@@ -36,6 +36,7 @@ typedef struct _linkedList
 {
     HASH_ITEM_T* head;             /* first item in list - null if list empty*/
     HASH_ITEM_T* tail;             /* last item in the list */
+    int count;
 } LINKED_LIST_T; 
 
 
@@ -261,4 +262,35 @@ void* hashTableLookup(char* key)
     return foundData;
 }
 
-
+void *hashTableMultiLookup(char *key) {
+    
+    void *foundData = NULL;
+    HASH_ITEM_T *pPrev = NULL;
+    HASH_ITEM_T *pTemp = NULL;
+    int hashVal;
+    int i = 0;
+    
+    if (table != NULL) {
+        
+        hashVal = hashFn(key);
+        if (table[hashVal].head != NULL) {
+            
+            pTemp = table[hashVal].head;
+            
+            /*to create the dynamic array*/
+            foundData = (void *) calloc(table[hashVal].count, sizeof(void));
+            while (pTemp != NULL) {
+                
+                if (strncmp(pTemp->key, key, KEYLEN-1) == 0) {
+                    foundData = pTemp->data;
+                }
+                else {
+                    pPrev = pTemp;
+                    pTemp = pTemp->next;
+                }
+                i++;
+            }
+        }
+    }
+    return foundData;
+}

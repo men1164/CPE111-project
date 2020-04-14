@@ -153,9 +153,7 @@ void moodAnalysis(int keywordsFound[], char songName[], int moodCount) {
     
     int dummy = 0;
     int i;
-    int colorMark = WHITE;
     SONG_T *songsList = NULL;
-    SONG_T *multiMood = NULL;
 
     
     songsList = (SONG_T *) calloc(1, sizeof(SONG_T));

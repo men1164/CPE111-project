@@ -18,7 +18,6 @@
 typedef struct _songInfo {
     char songName[32];
     char mood[32];
-    struct _songInfo *pNext;    /*next mood*/
 } SONG_T;
 
 void keywordsAnalysis();
