@@ -168,6 +168,7 @@ int hashTableInsert(char* key, void* data,int* pCollision)
           }
        table[hashval].tail = pItem;
        itemCount++;
+           table[hashval].count = itemCount;
        }
     return bOk;
 }
@@ -262,7 +263,7 @@ void* hashTableLookup(char* key)
     return foundData;
 }
 
-void *hashTableMultiLookup(char *key) {
+void *hashTableMultiLookup(char *key, int *pCount) {
     
     void *foundData = NULL;
     HASH_ITEM_T *pPrev = NULL;
@@ -282,7 +283,7 @@ void *hashTableMultiLookup(char *key) {
             while (pTemp != NULL) {
                 
                 if (strncmp(pTemp->key, key, KEYLEN-1) == 0) {
-                    foundData = pTemp->data;
+                    foundData[i] = pTemp->data;
                 }
                 else {
                     pPrev = pTemp;

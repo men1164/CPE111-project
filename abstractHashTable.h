@@ -63,6 +63,6 @@ void* hashTableRemove(char* key);
  */
 void* hashTableLookup(char* key);
 
-void *hashTableMultiLookup(char *key);
+void *hashTableMultiLookup(char *key, int *pCount);
 
 #endif
