@@ -168,7 +168,7 @@ int hashTableInsert(char* key, void* data,int* pCollision)
           }
        table[hashval].tail = pItem;
        itemCount++;
-           table[hashval].count = itemCount;
+           table[hashval].count++;
        }
     return bOk;
 }
@@ -265,7 +265,7 @@ void* hashTableLookup(char* key)
 
 void *hashTableMultiLookup(char *key, int *pCount) {
     
-    void *foundData = NULL;
+    void **foundData = NULL;
     HASH_ITEM_T *pPrev = NULL;
     HASH_ITEM_T *pTemp = NULL;
     int hashVal;
