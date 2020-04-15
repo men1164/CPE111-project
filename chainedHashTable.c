@@ -279,7 +279,7 @@ void *hashTableMultiLookup(char *key, int *pCount) {
             pTemp = table[hashVal].head;
             
             /*to create the dynamic array*/
-            foundData = (void *) calloc(table[hashVal].count, sizeof(void));
+            foundData = (void *) calloc(table[hashVal].count, sizeof(void*));
             while (pTemp != NULL) {
                 
                 if (strncmp(pTemp->key, key, KEYLEN-1) == 0) {
