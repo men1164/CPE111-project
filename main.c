@@ -46,27 +46,28 @@ unsigned int bitwiseOpHash(char* key)
 }
 
 void modifyUI() {
-    
+
 }
 
 void searchViaMoodUI() {
-    
+
     char key[4] = "sad";
     SONG_T *found = NULL;
-    
+
     found = hashTableLookup(key);
     if (found != NULL) {
         printf("Songs name; %s\n",found->songName);
         printf("Mood: %s\n\n",found->mood);
     }
+    printf("BYE");
 }
 
 void displayMoodUI() {
-    
+
 }
 
 void displaySongsUI() {
-    
+
 }
 
 int main(int argc, const char * argv[]) {
@@ -74,7 +75,7 @@ int main(int argc, const char * argv[]) {
     char input[10];
     int choice;
     int hashInitReturn;
-    
+
     hashInitReturn = hashTableInit(BUCKET_COUNT, &bitwiseOpHash);
     if (hashInitReturn == 0)
     {
@@ -84,24 +85,24 @@ int main(int argc, const char * argv[]) {
     {
         /*call the function to analyze the song and create hash table*/
         keywordsAnalysis();
-        
+
         printf("\n\n************************************************************\n\n");
         printf("Welcome to Emotion-based Song Recommender!!\n\n");
         printf("************************************************************\n\n");
-        
+
         while (1) {
-            
+
             printf("|Main Menu|\n");
             printf("\t1) Display all songs.\n");
             printf("\t2) Display all moods.\n");
             printf("\t3) Search songs via emotion.\n");
             printf("\t4) Modify Emotion.\n");
             printf("\t5) Exit the program,\n");
-            
+
             printf("What do you want to do? : ");
             fgets(input, sizeof(input), stdin);
             sscanf(input, "%d", &choice);
-        
+
             if (choice == 1) {
                 displaySongsUI();
             }
