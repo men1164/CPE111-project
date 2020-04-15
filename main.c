@@ -30,47 +30,51 @@ unsigned int bitwiseOpHash(char* key)
     int size = hashTableSize();
     int i = 0;
     for (i = 0; i < strlen(key); i++)
-        {
-    /* shift up four bits then add in next char */
-    result = (result << 4) + key[i];
+    {
+        /* shift up four bits then add in next char */
+        result = (result << 4) + key[i];
         if (tmp == (result & 0xf0000000))  /* if high bit is set */
         {
-        /* XOR result with down shifted tmp */
-        result = result ^ (tmp >> 24);
+            /* XOR result with down shifted tmp */
+            result = result ^ (tmp >> 24);
             /* then XOR with tmp itself */
-        result = result ^ tmp;
+            result = result ^ tmp;
         }
-        }
+    }
     result = result % size;   /* make it fit in the table size */
     return result;
 }
 
-void modifyUI() {
+void modifyUI()
+{
 
 }
 
-void searchViaMoodUI() {
-
-    char key[4] = "sad";
+void searchViaMoodUI()
+{
+    char key[4] = "sad"; //test
     SONG_T *found = NULL;
 
     found = hashTableLookup(key);
-    if (found != NULL) {
+    if (found != NULL)
+    {
         printf("Songs name; %s\n",found->songName);
         printf("Mood: %s\n\n",found->mood);
     }
-    printf("BYE");
 }
 
-void displayMoodUI() {
-
-}
-
-void displaySongsUI() {
+void displayMoodUI()
+{
 
 }
 
-int main(int argc, const char * argv[]) {
+void displaySongsUI()
+{
+
+}
+
+int main(int argc, const char * argv[])
+{
 
     char input[10];
     int choice;
@@ -90,7 +94,8 @@ int main(int argc, const char * argv[]) {
         printf("Welcome to Emotion-based Song Recommender!!\n\n");
         printf("************************************************************\n\n");
 
-        while (1) {
+        while (1)
+        {
 
             printf("|Main Menu|\n");
             printf("\t1) Display all songs.\n");
@@ -103,22 +108,28 @@ int main(int argc, const char * argv[]) {
             fgets(input, sizeof(input), stdin);
             sscanf(input, "%d", &choice);
 
-            if (choice == 1) {
+            if (choice == 1)
+            {
                 displaySongsUI();
             }
-            else if (choice == 2) {
+            else if (choice == 2)
+            {
                 displayMoodUI();
             }
-            else if (choice == 3) {
+            else if (choice == 3)
+            {
                 searchViaMoodUI();
             }
-            else if (choice == 4) {
+            else if (choice == 4)
+            {
                 modifyUI();
             }
-            else if (choice == 5) {
+            else if (choice == 5)
+            {
                 break;
             }
-            else {
+            else
+            {
                 printf("Please enter only number 1 to 5 !\n");
             }
         }
