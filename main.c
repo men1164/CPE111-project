@@ -52,15 +52,20 @@ void modifyUI()
 
 void searchViaMoodUI()
 {
-    char key[4] = "sad"; //test
-    SONG_T *found = NULL;
+    char key[4] = "sad"; /*for testing*/
+    SONG_T **found = NULL;
+    int i;
+    int count;
 
-    found = hashTableLookup(key);
+
+    found = hashTableMultiLookup(key, &count);
     if (found != NULL)
     {
-        printf("Songs name; %s\n",found->songName);
-        printf("Mood: %s\n\n",found->mood);
+        for (i=0; i<count; i++) {
+            printf("Songs: %s\n\n",found[i]->songName);
+        }
     }
+    free(found);
 }
 
 void displayMoodUI()

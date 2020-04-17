@@ -274,16 +274,18 @@ void *hashTableMultiLookup(char *key, int *pCount) {
     if (table != NULL) {
         
         hashVal = hashFn(key);
+
         if (table[hashVal].head != NULL) {
             
             pTemp = table[hashVal].head;
-            
+
             /*to create the dynamic array*/
             foundData = (void *) calloc(table[hashVal].count, sizeof(void*));
             while (pTemp != NULL) {
-                
+
                 if (strncmp(pTemp->key, key, KEYLEN-1) == 0) {
                     foundData[i] = pTemp->data;
+                    pTemp = pTemp->next;
                 }
                 else {
                     pPrev = pTemp;
@@ -291,6 +293,7 @@ void *hashTableMultiLookup(char *key, int *pCount) {
                 }
                 i++;
             }
+            *pCount = table[hashVal].count;
         }
     }
     return foundData;
