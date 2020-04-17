@@ -15,14 +15,16 @@
 #define WHITE 0
 #define BLACK 1
 
-typedef struct _songInfo {
+typedef struct _songInfo
+{
     char songName[32];
     char mood[32];
 } SONG_T;
 
 void keywordsAnalysis();
-int combineKeywords();
-void moodAnalysis(int keywordsFound[], char songName[], int moodCount);
+void combineKeywords();
+int moodsItemCount();
+void moodAnalysis(int keywordsFound[], char songName[]);
 void findMoodPosition(int i);
 
 #endif /* analyzeMood_h */

@@ -54,9 +54,23 @@ void searchViaMoodUI()
 {
     char key[4] = "sad"; /*for testing*/
     SONG_T **found = NULL;
+    char read[READ];
+    FILE *pMoodlist = NULL;
     int i;
     int count;
-
+    
+//    pMoodlist = fopen("Mood/moodList.txt", "r");
+//    if (pMoodlist == NULL) {
+//        printf("Error! - Can't open the mood list file for searching.\n");
+//        exit(0);
+//    }
+//
+//    printf("\nPlease choose the mood that you want.\n");
+//
+//    while (fgets(read, sizeof(read), pMoodlist) != NULL)
+//    {
+//
+//    }
 
     found = hashTableMultiLookup(key, &count);
     if (found != NULL)
