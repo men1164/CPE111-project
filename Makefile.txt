@@ -14,17 +14,20 @@ EXECUTABLES= main$(EXECEXT)
 
 all : $(EXECUTABLES)
 
-main.o :	main.c abstractHashTable.h analyzeMood.h
+main.o :	main.c analyzeMood.h sortedBinaryTree.h
 	gcc -c main.c
 
-chainedHashTable.o :	chainedHashTable.c abstractHashTable.h
-	gcc -c chainedHashTable.c
-
-analyzeMood.o : analyzeMood.c analyzeMood.h abstractHashTable.h
+analyzeMood.o : analyzeMood.c analyzeMood.h sortedBinaryTree.h
 	gcc -c analyzeMood.c
 
-main$(EXECEXT) : main.o chainedHashTable.o analyzeMood.o
-	gcc -o main$(EXECEXT) main.o chainedHashTable.o analyzeMood.o
+sortedBinaryTree.o :	sortedBinaryTree.c sortedBinaryTree.h analyzeMood.h
+	gcc -c sortedBinaryTree.c
+
+linkedListMood.o :	linkedListMood.c linkedListMood.h analyzeMood.h
+	gcc -c linkedListMood.c
+
+main$(EXECEXT) : main.o analyzeMood.o sortedBinaryTree.o linkedListMood.o
+	gcc -o main$(EXECEXT) main.o analyzeMood.o sortedBinaryTree.o linkedListMood.o
 
 clean : 
 	-rm *.o
