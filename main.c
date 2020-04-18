@@ -75,7 +75,7 @@ int main(int argc, const char * argv[])
         printf("\t3) Search songs by mood.\n");
         printf("\t4) Search songs by title.\n");
         printf("\t5) Modify Mood.\n");
-        printf("\t6) Exit the program,\n");
+        printf("\t6) Exit the program.\n");
 
         printf("What do you want to do? : ");
         fgets(input, sizeof(input), stdin);
