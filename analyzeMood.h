@@ -12,19 +12,31 @@
 #define READ 256
 #define MAXMOODS 10
 #define KEYWORDSLEN 512
-#define WHITE 0
-#define BLACK 1
+
 
 typedef struct _songInfo
 {
     char songName[32];
+    char songFile[32];
     char mood[32];
+    int songMood[MAXMOODS];
+    struct _songInfo *left;
+    struct _songInfo *right;
 } SONG_T;
 
+typedef struct _songItem
+{
+    SONG_T *song;
+    struct _songItem *next;
+} SONG_ITEM_T;
+
+void initualizeMoodArray();
 void keywordsAnalysis();
 void combineKeywords();
 int moodsItemCount();
 void moodAnalysis(int keywordsFound[], char songName[]);
+void linkedListMood(SONG_T *song);
+void searchByMood(int moodPosition);
 void findMoodPosition(int i);
 
 #endif /* analyzeMood_h */

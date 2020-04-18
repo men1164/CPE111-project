@@ -13,13 +13,25 @@
 #include <sys/stat.h>
 
 #include "analyzeMood.h"
-#include "abstractHashTable.h"
-
+#include "sortedBinaryTree.h"
 
 char saveMood[32];
 char keywordsString[MAXMOODS][KEYWORDSLEN];
 static int moodCount = 0;
 
+SONG_ITEM_T *listHead[MAXMOODS];
+SONG_ITEM_T *listTail[MAXMOODS];
+
+void initualizeMoodArray()
+{
+    int i;
+    
+    for (i=0; i<MAXMOODS; i++)
+    {
+        listHead[i] = NULL;
+        listTail[i] = NULL;
+    }
+}
 
 void keywordsAnalysis()
 {
@@ -34,6 +46,7 @@ void keywordsAnalysis()
     char *lyricsArray, *token, *test;
     char toSearch[128];
 
+    initualizeMoodArray();
     pSongList = fopen("Lyrics/songList.txt", "r");
     if (pSongList == NULL)
     {
@@ -55,8 +68,7 @@ void keywordsAnalysis()
             printf("Error! - Can't stat the lyrics file size -> '%s'.\n", songName);
             exit(1);
         }
-//        printf("%lld\n",fileStatus.st_size);
-        
+
         fileSize = (int) fileStatus.st_size;
         lyricsArray = (char *) calloc(fileSize+1, sizeof(char));
         if (lyricsArray == NULL)
@@ -83,9 +95,9 @@ void keywordsAnalysis()
                 for (i=0; i<moodCount; i++)
                 {
                     test = strstr(keywordsString[i], toSearch);
-                    if (test != NULL) {
+                    if (test != NULL)
+                    {
                         keywordsCount[i]++;
-//                        printf("Mood #%d: %s with %s\n\n",i+1,token,test);
                     }
                 }
                 token = strtok(NULL, " ,.!?:;()&\n\r");
@@ -96,12 +108,74 @@ void keywordsAnalysis()
         {
             printf("\t%d:Found %d words\n", i+1, keywordsCount[i]);
         }
-        
+
         moodAnalysis(keywordsCount, songName);
         fclose(pLyrics);
     }
-    printf("\nItems in hashTable %d.\n",hashTableItemCount());
     fclose(pSongList);
+}
+
+void moodAnalysis(int keywordsFound[], char songName[]) {
+    
+    int i;
+    SONG_T *song = NULL;
+
+    song = (SONG_T *) calloc(1, sizeof(SONG_T));
+    
+    strcpy(song->songName, songName);
+    
+    for (i=0; i<moodCount; i++)
+    {
+        if (keywordsFound[i] > 5)
+        {
+            song->songMood[i] = 1;
+        }
+    }
+    checkRoot(song);
+    linkedListMood(song);
+}
+
+void linkedListMood(SONG_T *song)
+{
+    int i;
+    SONG_ITEM_T *songItem = NULL;
+
+    songItem = (SONG_ITEM_T *) calloc(1, sizeof(SONG_ITEM_T));
+    songItem->song = song;
+
+    for (i=0; i<moodCount; i++)
+    {
+        if (songItem->song->songMood[i] == 1)
+        {
+            if (listHead[i] == NULL)
+            {
+                listHead[i] = listTail[i] = songItem;
+            }
+            else
+            {
+                listTail[i]->next = songItem;
+                listTail[i] = songItem;
+            }
+        }
+    }
+}
+
+void searchByMood(int moodPosition)
+{
+    SONG_ITEM_T *currentSong = listHead[moodPosition];
+
+    if (currentSong == NULL)
+    {
+        printf("\n\t**** No songs found in this mood. ****\n\n");
+    }
+    else
+    {
+        while (currentSong != NULL)
+        {
+            printf("%s\n",currentSong->song->songName);
+            currentSong = currentSong->next;
+        }
+    }
 }
 
 void combineKeywords()
@@ -160,35 +234,6 @@ void combineKeywords()
 int moodsItemCount()
 {
     return moodCount;
-}
-
-void moodAnalysis(int keywordsFound[], char songName[]) {
-    
-    int dummy = 0;
-    int i;
-    SONG_T *songsList = NULL;
-
-    
-    songsList = (SONG_T *) calloc(1, sizeof(SONG_T));
-    strcpy(songsList->songName, songName);
-
-    for (i=0; i<moodCount; i++)
-    {
-        if (keywordsFound[i] > 5)
-        {
-            findMoodPosition(i);
-            strcpy(songsList->mood, saveMood);
-            hashTableInsert(songsList->mood, songsList, &dummy);
-            
-//            if (colorMark == WHITE) {
-//
-//                colorMark = BLACK;
-//            }
-//            else {
-//                /*already insert this song, plans to use hashLookup and put in pNext*/
-//            }
-        }
-    }
 }
 
 void findMoodPosition(int position)
