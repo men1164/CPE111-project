@@ -23,8 +23,11 @@ analyzeMood.o : analyzeMood.c analyzeMood.h sortedBinaryTree.h
 sortedBinaryTree.o :	sortedBinaryTree.c sortedBinaryTree.h analyzeMood.h
 	gcc -c sortedBinaryTree.c
 
-main$(EXECEXT) : main.o analyzeMood.o sortedBinaryTree.o
-	gcc -o main$(EXECEXT) main.o analyzeMood.o sortedBinaryTree.o
+linkedListMood.o :	linkedListMood.c linkedListMood.h analyzeMood.h
+	gcc -c linkedListMood.c
+
+main$(EXECEXT) : main.o analyzeMood.o sortedBinaryTree.o linkedListMood.o
+	gcc -o main$(EXECEXT) main.o analyzeMood.o sortedBinaryTree.o linkedListMood.o
 
 clean : 
 	-rm *.o

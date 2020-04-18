@@ -13,6 +13,7 @@
 
 #include "sortedBinaryTree.h"
 #include "analyzeMood.h"
+#include "linkedListMood.h"
 
 void modifyUI()
 {
@@ -54,11 +55,6 @@ void displayMoodUI()
 
 }
 
-void displaySongsUI()
-{
-    printAll();
-}
-
 int main(int argc, const char * argv[])
 {
     char input[10];
@@ -87,7 +83,7 @@ int main(int argc, const char * argv[])
 
         if (choice == 1)
         {
-            displaySongsUI();
+            printAll();
         }
         else if (choice == 2)
         {
