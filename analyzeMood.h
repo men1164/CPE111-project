@@ -30,10 +30,13 @@ typedef struct _songItem
     struct _songItem *next;
 } SONG_ITEM_T;
 
+void initualizeMoodArray();
 void keywordsAnalysis();
 void combineKeywords();
 int moodsItemCount();
 void moodAnalysis(int keywordsFound[], char songName[]);
+void linkedListMood(SONG_T *song);
+void searchByMood(int moodPosition);
 void findMoodPosition(int i);
 
 #endif /* analyzeMood_h */
