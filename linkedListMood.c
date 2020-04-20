@@ -1,10 +1,10 @@
-//
-//  linkedListMood.c
-//  project2
-//
-//  Created by Thanasit Suwanposri on 18/4/2563 BE.
-//  Copyright © 2563 Thanasit Suwanposri. All rights reserved.
-//
+/*
+ * Created by Kittipol Neamprasertporn (Dome) 62070503404
+ *
+ *
+ * Based on Lab 3 code.
+ * This file use linked list to store and searching songs by mood.
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,14 +27,16 @@ void initualizeMoodArray()
     }
 }
 
-void linkedListMood(SONG_T *song, int moodCount)
+void linkedListMood(SONG_T *song)
 {
     int i;
+    int moodCount;
     SONG_ITEM_T *songItem = NULL;
 
     songItem = (SONG_ITEM_T *) calloc(1, sizeof(SONG_ITEM_T));
     songItem->song = song;
 
+    moodCount = moodsItemCount();
     for (i=0; i<moodCount; i++)
     {
         if (songItem->song->songMood[i] == 1)

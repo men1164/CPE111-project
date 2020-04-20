@@ -1,10 +1,11 @@
-//
-//  sortedBinaryTree.c
-//  project2
-//
-//  Created by Thanasit Suwanposri on 17/4/2563 BE.
-//  Copyright © 2563 Thanasit Suwanposri. All rights reserved.
-//
+/*
+ * Created by Thanasit Suwanposri (Men) 62070503414
+ * and Krittin Srithong (Pong) 62070503402
+ *
+ *
+ * Based on Lab 6 code.
+ * This fle use for create a sorted binary tree to store the songs.
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,9 +28,6 @@ void checkRoot(SONG_T *song)
     }
 }
 
-/* Based on code by Sally Goldin from [simpleBinaryTree.c]
- * Used with permission.
- */
 void insertNode(SONG_T *pCurrent, SONG_T *pNew)
 {
      if (strcmp(pNew->songName, pCurrent->songName) < 0)
@@ -56,7 +54,16 @@ void insertNode(SONG_T *pCurrent, SONG_T *pNew)
      }
 }
 
-SONG_T *searchByTitle(SONG_T *pCurrent, char searchSong[])
+SONG_T *searchByTitle(char searchSong[])
+{
+    SONG_T *pResult = NULL;
+    
+    pResult = recursiveSearch(rootSong, searchSong);
+    
+    return pResult;
+}
+
+SONG_T *recursiveSearch(SONG_T *pCurrent, char searchSong[])
 {
     SONG_T *pResult = NULL;
     
@@ -68,11 +75,11 @@ SONG_T *searchByTitle(SONG_T *pCurrent, char searchSong[])
         }
         else if (strcasecmp(pCurrent->songName, searchSong) < 0)
         {
-            pResult = searchByTitle(pCurrent->left, searchSong);
+            pResult = recursiveSearch(pCurrent->left, searchSong);
         }
         else
         {
-            pResult = searchByTitle(pCurrent->right, searchSong);
+            pResult = recursiveSearch(pCurrent->right, searchSong);
         }
     }
     return pResult;
@@ -94,4 +101,22 @@ void recursivePrint(SONG_T *pCurrent)
     {
         recursivePrint(pCurrent->right);
     }
+}
+
+void freeTree()
+{
+    recursiveFree(rootSong);
+}
+
+void recursiveFree(SONG_T *pCurrent)
+{
+    if (pCurrent->left != NULL)
+    {
+        recursiveFree(pCurrent->left);
+    }
+    if (pCurrent->right != NULL)
+    {
+        recursiveFree(pCurrent->right);
+    }
+    free(pCurrent);
 }

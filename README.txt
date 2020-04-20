@@ -1,9 +1,8 @@
-# cpe111-project
  Topic: Emotion-Based Song Recommender
  Group: Runtime Error
  
  Done:
- - Analyze the mood each songs
+ - Analyse the mood each songs
  - Songs and moods sample dataset
  - Linked List of Mood
  - Search songs by Mood (Display songs name only)
@@ -13,7 +12,7 @@
  
 
 Doing:
-- Search songs by title, user type the whole songs name (Display exactly matched song name only)
+- Search songs by title, user type the whole songs name (input exactly matched song name only)
 
 
 To Do:
@@ -24,6 +23,6 @@ To Do:
 
 QUESTION & ISSUE:
 - How to do the particular searching songs by title using tree traversal? (Or you recommend to search directly from text file?)
-- (ISSUE) When user type the correct whole song's name, the traversal found only one song, 'Crying Over You'. The other songs not found, don't know why. How can I fix this?
+- (ISSUE) When user type the correct whole song's name in search songs by title, the traversal found only one song, 'Crying Over You'. The other songs not found, don't know why. How can I fix this?
 - (ISSUE) Can't free the tree when user finished modify mood for make the mood analysis again, got a core dumped. Don't know how to fix. When analysis again, song list wil be duplicate.
 - (ISSUE) Don't know how to do with the songs that no moods (some songs in sample data can't analyse mood because found keywords of each mood less than 5 words)

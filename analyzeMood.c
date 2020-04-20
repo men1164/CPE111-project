@@ -1,10 +1,10 @@
-//
-//  analyzeMood.c
-//  project
-//
-//  Created by Thanasit Suwanposri on 29/3/2563 BE.
-//  Copyright © 2563 Thanasit Suwanposri. All rights reserved.
-//
+/*
+ * Created by Thanasit Suwanposri (Men) 62070503414
+ *
+ * This file is use for lyrics analysis.
+ */
+
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -20,6 +20,7 @@ char saveMood[32];
 char keywordsString[MAXMOODS][KEYWORDSLEN];
 static int moodCount = 0;
 
+/* This function use for separate the lyrics into word by word and compare with keywords each mood*/
 void keywordsAnalysis()
 {
     FILE *pSongList = NULL;
@@ -102,6 +103,9 @@ void keywordsAnalysis()
     fclose(pSongList);
 }
 
+/* Check if found keywords more than 5 words each mood, set the mood for that song
+ * Store song info into binary tree and mood to linked list
+ */
 void moodAnalysis(int keywordsFound[], char songName[]) {
     
     int i;
@@ -119,9 +123,10 @@ void moodAnalysis(int keywordsFound[], char songName[]) {
         }
     }
     checkRoot(song);
-    linkedListMood(song,moodCount);
+    linkedListMood(song);
 }
 
+/* Use to combine all keywords for comparing with lyrics */
 void combineKeywords()
 {
     FILE *pMoodlist = NULL;
@@ -130,7 +135,7 @@ void combineKeywords()
     char read[READ];
     char mood[32], moodFile[64];
     char keywordsRead[KEYWORDSLEN];
-    char keywords[32];
+    char newKeywords[32];
     
     pMoodlist = fopen("Mood/moodList.txt", "r");
     if (pMoodlist == NULL)
@@ -154,10 +159,10 @@ void combineKeywords()
         
         while (fgets(read, sizeof(read), pEachMood) != NULL)
         {
-            sscanf(read, "%[^\n]", keywords);
-            if (strlen(keywords) + strlen(keywordsRead) < KEYWORDSLEN)
+            sscanf(read, "%[^\n]", newKeywords);
+            if (strlen(newKeywords) + strlen(keywordsRead) < KEYWORDSLEN)
             {
-                strcat(keywordsRead, keywords);
+                strcat(keywordsRead, newKeywords);
                 strcat(keywordsRead, "|");
             }
             else
@@ -166,7 +171,7 @@ void combineKeywords()
                 break;
             }
         }
-        sprintf(keywordsString[i], "|%s",keywordsRead);
+        sprintf(keywordsString[i], "|%s",keywordsRead); /*add the front delimeter*/
         i++;
         fclose(pEachMood);
     }
@@ -177,30 +182,4 @@ void combineKeywords()
 int moodsItemCount()
 {
     return moodCount;
-}
-
-void findMoodPosition(int position)
-{
-    FILE *pMoodlist = NULL;
-    char read[READ];
-    int i = 0;
-    
-    memset(saveMood, 0, sizeof(saveMood));
-    
-    pMoodlist = fopen("Mood/moodList.txt", "r");
-    if (pMoodlist == NULL)
-    {
-        printf("Error! - Can't open list of mood files.\n");
-        exit(6);
-    }
-    while (fgets(read, sizeof(read), pMoodlist) != NULL)
-    {
-        if (i == position)
-        {
-            sscanf(read, "%s", saveMood);
-            break;
-        }
-        i++;
-    }
-    fclose(pMoodlist);
 }

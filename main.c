@@ -1,8 +1,8 @@
-/*************************************
+/*
+ * Created by Krittin Srithong (Pong) 62070503402
+ * and Kittipol Neamprasertporn (Dome) 62070503404
  *
- * USER INTERFACE ONLY
- *
- ************************************/
+ */
 
 
 
@@ -14,16 +14,35 @@
 #include "sortedBinaryTree.h"
 #include "analyzeMood.h"
 #include "linkedListMood.h"
+#include "modifyMood.h"
 
-void modifyUI()
+void searchByTitleUI()
 {
-
+    char input[64];
+    char title[64];
+    SONG_T *pResult = NULL;
+    
+    printf("What songs you want to search: ");
+    fgets(input,sizeof(input),stdin);
+    sscanf(input,"%[^\n]",title);
+    
+    pResult = searchByTitle(title);
+    if (pResult == NULL)
+    {
+        printf("\nNo songs matched.\n\n");
+    }
+    else
+    {
+        printf("\nFound!\n\n");
+        /* direct to display lyrics function (have not created yet)*/
+    }
 }
 
-void searchViaMoodUI()
+void displayMoodUI()
 {
     FILE *pMoodlist = NULL;
     char read[READ];
+    char decision[8];
     int i = 1;
     int moodChoice;
     
@@ -42,17 +61,18 @@ void searchViaMoodUI()
     }
     memset(read, 0, sizeof(read));
     
-    printf("What mood do you want? : ");
+    printf("Do you want to search songs by mood? (yes|no): ");
     fgets(read, sizeof(read), stdin);
-    sscanf(read, "%d",&moodChoice);
-    moodChoice = moodChoice - 1;
-    
-    searchByMood(moodChoice);
-}
-
-void displayMoodUI()
-{
-
+    sscanf(read, "%s",decision);
+    if (strcasecmp(decision, "yes") == 0)
+    {
+        memset(read, 0, sizeof(read));
+        printf("Enter the number of mood that you want : ");
+        fgets(read, sizeof(read), stdin);
+        sscanf(read, "%d",&moodChoice);
+        
+        searchByMood(moodChoice-1);
+    }
 }
 
 int main(int argc, const char * argv[])
@@ -71,11 +91,10 @@ int main(int argc, const char * argv[])
     {
         printf("|Main Menu|\n");
         printf("\t1) Display all songs.\n");
-        printf("\t2) Display all moods.\n");
-        printf("\t3) Search songs by mood.\n");
-        printf("\t4) Search songs by title.\n");
-        printf("\t5) Modify Mood.\n");
-        printf("\t6) Exit the program.\n");
+        printf("\t2) Display all moods and Search songs by mood.\n");
+        printf("\t3) Search songs by title.\n");
+        printf("\t4) Modify Mood.\n");
+        printf("\t5) Exit the program.\n");
 
         printf("What do you want to do? : ");
         fgets(input, sizeof(input), stdin);
@@ -91,17 +110,21 @@ int main(int argc, const char * argv[])
         }
         else if (choice == 3)
         {
-            searchViaMoodUI();
+            searchByTitleUI();
         }
         else if (choice == 4)
         {
+            modifyMood();
             
+            /* issue: got core dumped when called freeTree();
+             */
+            
+            //freeTree();
+            
+            /* issue: can't free tree. When analysis again, the song list will be duplicate */
+            keywordsAnalysis(); /*reset after modify*/
         }
         else if (choice == 5)
-        {
-            modifyUI();
-        }
-        else if (choice == 6)
         {
             break;
         }

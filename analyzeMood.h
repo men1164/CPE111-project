@@ -1,10 +1,8 @@
-//
-//  analyzeMood.h
-//  project
-//
-//  Created by Thanasit Suwanposri on 29/3/2563 BE.
-//  Copyright © 2563 Thanasit Suwanposri. All rights reserved.
-//
+/*
+ * Created by Thanasit Suwanposri (Men) 62070503414
+ *
+ * This file is use for lyrics analysis.
+ */
 
 #ifndef analyzeMood_h
 #define analyzeMood_h
@@ -17,8 +15,6 @@
 typedef struct _songInfo
 {
     char songName[32];
-    char songFile[32];
-    char mood[32];
     int songMood[MAXMOODS];
     struct _songInfo *left;
     struct _songInfo *right;
@@ -34,6 +30,5 @@ void keywordsAnalysis();
 void combineKeywords();
 int moodsItemCount();
 void moodAnalysis(int keywordsFound[], char songName[]);
-void findMoodPosition(int i);
 
 #endif /* analyzeMood_h */
