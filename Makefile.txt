@@ -26,7 +26,7 @@ sortedBinaryTree.o :	sortedBinaryTree.c sortedBinaryTree.h analyzeMood.h
 linkedListMood.o :	linkedListMood.c linkedListMood.h analyzeMood.h
 	gcc -c linkedListMood.c
 
-modifyMood.o :	modifyMood.c modifyMood.h
+modifyMood.o :	modifyMood.c modifyMood.h analyzeMood.h
 	gcc -c modifyMood.c
 
 main$(EXECEXT) : main.o analyzeMood.o sortedBinaryTree.o linkedListMood.o modifyMood.o
