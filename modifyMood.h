@@ -7,7 +7,6 @@
 #define modifyMood_h
 
 #define MAXKEYWORDS 40
-#define MAXMOODS 10
 
 void modifyMood();
 void addMood();

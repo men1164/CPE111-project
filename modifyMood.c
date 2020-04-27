@@ -9,6 +9,7 @@
 #include <string.h>
 
 #include "modifyMood.h"
+#include "analyzeMood.h" /*include MAXMOODS define value*/
 
 void modifyMood()
 {
