@@ -47,23 +47,20 @@ void displaySongUI()
     FILE * pSongLists = NULL;
     FILE * pLyrics = NULL;
     char song[64];
+    char decision[8];
     
     
     while(1)
     {
         returnCount = readSongName();
         returnCount--;
-        printf("Enter song number (negative number to stop): ");
+        printf("Enter song number: ");
         fgets(stringInput,sizeof(stringInput),stdin);
         sscanf(stringInput,"%d",&inputSongNumber);
         
-        if((inputSongNumber > returnCount) || (inputSongNumber == 0))
+        if((inputSongNumber > returnCount) || (inputSongNumber <= 0))
         {
             printf("You entered the invalid song number.\n");
-        }
-        else if (inputSongNumber < 0)
-        {
-            break;
         }
         else
         {
@@ -94,6 +91,18 @@ void displaySongUI()
             }
             printf("\n\n");
             fclose(pLyrics);
+            
+            memset(stringInput, 0, sizeof(stringInput));
+            memset(decision, 0, sizeof(decision));
+            
+            printf("\nContinue choosing another song? (Yes|No): ");
+            fgets(stringInput, sizeof(stringInput), stdin);
+            sscanf(stringInput, "%s",decision);
+            if (strcasecmp(decision, "No") == 0)
+            {
+                printf("\nBack to Main Menu\n");
+                break;
+            }
         }
     }
 }
