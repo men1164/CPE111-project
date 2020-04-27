@@ -106,6 +106,7 @@ void recursivePrint(SONG_T *pCurrent)
 void freeTree()
 {
     recursiveFree(rootSong);
+    rootSong = NULL;
 }
 
 void recursiveFree(SONG_T *pCurrent)

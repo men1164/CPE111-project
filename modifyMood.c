@@ -17,34 +17,43 @@ void modifyMood()
     
     while(1)
     {
-        printf("what do you want to do?\n");
-        printf("    1 - add mood\n");
-        printf("    2 - delete mood\n");
-        printf("    3 - adjust keyword\n");
-        printf("    4 - back to main menu\n");
-        printf(" Ans: ");
+        ans = 0;
+        printf("======================================\n");
+        printf("      What do you want to do?\n");
+        printf("--------------------------------------\n");
+        printf("        1 - add mood\n");
+        printf("        2 - delete mood\n");
+        printf("        3 - adjust keyword\n");
+        printf("        4 - back to main menu\n");
+        printf("  Ans: ");
         fgets(input, sizeof(input), stdin);
         sscanf(input, "%d", &ans);
 
         if(ans == 1)
         {
+            printf("======================================\n");
             addMood();
         }
         else if(ans == 2)
         {
+            printf("======================================\n");
             deleteMood();
         }
         else if(ans == 3)
         {
+            printf("======================================\n");
             adjustKeyword();
         }
         else if(ans == 4)
         {
+            printf("======================================\n");
             break;
         }
         else
         {
-            printf("Invalid Number.\n");
+            printf("------------------------------\n");
+            printf("|       Invalid Number       |\n");
+            printf("------------------------------\n\n");
         }
     }
 }
@@ -62,6 +71,7 @@ void addMood()
     int countMood = 0;                /* keep the amount of mood list  */
     int i = 0;                        /* for start the loop */
     int checkExist = 1;               /* check if the mood that user input is already existes or not */
+    long int length = 0;                   /* count length of new mood */
     
     FILE* pIn = NULL;     /* to read mood list */
     FILE* pOut = NULL;    /* to add mood list */
@@ -70,71 +80,93 @@ void addMood()
     pIn = fopen("Mood/moodList.txt","r");
     pOut = fopen("Mood/moodList.txt","a");
     
+    printf("\n");
+    
     if((pIn == NULL) || (pOut == NULL))
     {
         printf(" Cannot open moodList\n");
         exit(0);
     }
-    
+     
     while(fgets(lines, sizeof(lines), pIn) != NULL)  /* count mood and keep in array */
     {
         sscanf(lines, "%s", moodLists[countMood]);
         countMood++;
     }
+    
     if(countMood > MAXMOODS-1) /* in case mood is more than 10 */
     {
-        printf("you cannot add more mood\n");
+        printf("--------------------------------\n");
+        printf("|   you cannot add more mood   |\n");
+        printf("--------------------------------\n");
     }
     else
     {
-        printf("here's the existed mood\n");
+        //printf("--------------------------------\n");
+        printf("  -here's the existed mood-\n");
+        printf("--------------------------------\n");
         for(i=0;i<countMood;i++)
         {
             printf("   %d. %s\n", i+1,moodLists[i]);
         }
+        length = 0;
+        memset(newMood, 0, sizeof(newMood));
         printf("What mood you want to add? ");
         fgets(lines, sizeof(lines), stdin);
         sscanf(lines, "%s", newMood);
-        
-        for(i=0;i<countMood;i++)
+        length = strlen(newMood);
+         
+        //printf("lenght = %d\n", length);
+         
+        if(length == 0)
         {
-            if(strcasecmp(moodLists[i],newMood) == 0) /* in case find the same word in moodlist */
-            {
-                printf("---------------------------------\n");
-                printf("   This mood is already existed\n");
-                printf("---------------------------------\n");
-                checkExist = 0;
-                break;
-            }
+            printf("---------------------------------\n");
+            printf("|   Please input something      |\n");
+            printf("---------------------------------\n");
         }
-        if(checkExist == 1)
+        else
         {
-            countMood++;
-            sscanf(newMood, "%s", moodLists[countMood-1]);
-            fprintf(pOut, "%s\n", moodLists[countMood-1]);  /* add mood in mood list */
-            printf("---------------------------------\n");
-            printf("          Mood updated\n");
-            printf("---------------------------------\n");
             for(i=0;i<countMood;i++)
             {
-                printf("   %d. %s\n", i+1,moodLists[i]);
+                if(strcasecmp(moodLists[i],newMood) == 0) /* in case find the same word in moodlist */
+                {
+                    printf("------------------------------------\n");
+                    printf("|   This mood is already existed   |\n");
+                    printf("------------------------------------\n");
+                    checkExist = 0;
+                    break;
+                }
             }
-            
-            strcat(newMood, ".txt");
-            strcat(newMoodFile, newMood);
-            
-            /* create file for mood */
-            pNew = fopen(newMoodFile, "w");
-            if(pNew == NULL)
+            if(checkExist == 1)
             {
-                printf(" Cannot create new mood file\n");
-                exit(1);
+                countMood++;
+                sscanf(newMood, "%s", moodLists[countMood-1]);
+                fprintf(pOut, "%s\n", moodLists[countMood-1]);  /* add mood in mood list */
+                printf("---------------------------------\n");
+                printf("|         -Mood updated-        |\n");
+                printf("---------------------------------\n");
+                for(i=0;i<countMood;i++)
+                {
+                    printf("   %d. %s\n", i+1,moodLists[i]);
+                }
+
+                strcat(newMood, ".txt");
+                strcat(newMoodFile, newMood);
+             
+                /* create file for mood */
+                pNew = fopen(newMoodFile, "w");
+                if(pNew == NULL)
+                {
+                    printf(" Cannot create new mood file\n");
+                    exit(1);
+                }
+                fclose(pNew);
             }
-            fclose(pNew);
         }
     }
     fclose(pIn);
     fclose(pOut);
+    printf("\n");
 }
 
 
@@ -155,9 +187,13 @@ void deleteMood()
     
     pIn = fopen("Mood/moodList.txt","r");
     
+    printf("\n");
+    
     if(pIn == NULL )
     {
-        printf("   Cannot open moodList\n");
+        printf("----------------------------------\n");
+        printf("|      Cannot open moodList      |\n");
+        printf("----------------------------------\n");
         exit(2);
     }
     
@@ -167,7 +203,8 @@ void deleteMood()
         countMood++;
     }
         
-    printf("here's the existed mood\n");
+    printf("   -here's the existed mood-\n");
+    printf("----------------------------------\n");
     for(i=0;i<countMood;i++)
     {
         printf("   %d. %s\n", i+1,moodLists[i]);
@@ -181,7 +218,9 @@ void deleteMood()
         
         if((deleteNum < 1) || (deleteNum > countMood)) /* make sure user type existed number */
         {
-            printf("   please input existed number\n");
+            printf("-----------------------------------\n");
+            printf("|   please input existed number   |\n");
+            printf("-----------------------------------\n");
         }
     }
     
@@ -193,13 +232,15 @@ void deleteMood()
         
         if((strcasecmp(ans,"yes") != 0) && (strcasecmp(ans,"no") != 0))  /* incase user types neither yes nor no */
         {
-            printf("please input 'yes' or 'no' only\n");
+            printf("-----------------------------------\n");
+            printf("| please input 'yes' or 'no' only |\n");
+            printf("-----------------------------------\n");
         }
         else if(strcasecmp(ans,"no") == 0)  /* incase user types no */
         {
             printf("---------------------------------\n");
-            printf("No Change -- Delete cancelled\n");
-            printf("---------------------------------\n");
+            printf("| No Change -- Delete cancelled |\n");
+            printf("---------------------------------\n\n");
         }
         else if(strcasecmp(ans,"yes") == 0)  /* incase user types yes */
         {
@@ -222,6 +263,9 @@ void deleteMood()
                 }
             }
             fclose(pOut);
+            printf("----------------------\n");
+            printf("|    Mood deleted    |\n");
+            printf("----------------------\n\n");
         }
     }
     fclose(pIn);
@@ -243,12 +287,16 @@ void adjustKeyword()
     
     pIn = fopen("Mood/moodList.txt","r");
     
-    if(pIn == NULL )
+    if(pIn == NULL)
     {
-        printf("   Cannot open moodList\n");
+        printf("----------------------------------\n");
+        printf("|      Cannot open moodList      |\n");
+        printf("----------------------------------\n");
         exit(4);
     }
-    printf("here's the existed mood\n");
+    printf("\n");
+    printf("   -here's the existed mood-\n");
+    printf("--------------------------------\n");
     while(fgets(input, sizeof(input), pIn) != NULL)
     {
         sscanf(input, "%s", moodLists[countMood]);
@@ -264,32 +312,40 @@ void adjustKeyword()
         
         if((choosenMoodNum < 1) || (choosenMoodNum > countMood))
         {
-            printf("   please input existed number\n");
+            printf("-----------------------------------\n");
+            printf("|   please input existed number   |\n");
+            printf("-----------------------------------\n");
         }
     }
     
     while( (ans<1) || (ans>2) )  /* keep asking til user types existed number */
     {
         ans = 0;
-        printf("what you want to do with '%s' Mood?\n", moodLists[choosenMoodNum-1]);
-        printf("   1.add keywords\n");
-        printf("   2.delete keywords\n");
+        printf("\n---------------------------------------\n");
+        printf("  what you want to do with '%s' Mood?\n", moodLists[choosenMoodNum-1]);
+        printf("---------------------------------------\n");
+        printf("     1.add keywords\n");
+        printf("     2.delete keywords\n");
         printf("ans: ");
         fgets(input, sizeof(input), stdin);
         sscanf(input, "%d", &ans);
         
         if( (ans<1) || (ans>2) )
         {
-            printf("   please input existed number\n");
+            printf("-------------------------------------\n");
+            printf("|    please input existed number    |\n");
+            printf("-------------------------------------\n");
         }
     }
         
     if(ans == 1)   /* incase user want to add keywords */
     {
+        printf("-------------------------------------\n");
         addKeyword(moodLists[choosenMoodNum-1]);
     }
     else if(ans == 2)    /* incase user want to delete keywords */
     {
+        printf("-------------------------------------\n");
         deleteKeyword(moodLists[choosenMoodNum-1]);
     }
 }
@@ -305,7 +361,7 @@ void addKeyword(char mood[])
     char keyword[64];              /* keep exist keyword */
     char newKeyword[64];           /* keep new keyword */
     int countKeywords = 0;         /* count keywords */
-    long int length = -2;               /* keep length of keyword */
+    long int length = -2;          /* keep length of keyword */
     int check = 1;                 /* check if keyword is already existed or not */
     FILE* pIn = NULL;              /* to read keyword's mood list */
     FILE* pOut = NULL;             /* to add keyword's mood list */
@@ -313,21 +369,25 @@ void addKeyword(char mood[])
     strcat(mood, ".txt");
     strcat(fileName, mood);
     
-    while(length != 0 && countKeywords<MAXKEYWORDS)
+    while((length != 0) && (countKeywords<MAXKEYWORDS))
     {
         countKeywords = 0;
         check =1;
         pIn = fopen(fileName,"r");
         if(pIn == NULL)
         {
-            printf("   Cannot open keyword of mood\n");
+            printf("-----------------------------------\n");
+            printf("|   Cannot open keyword of mood   |\n");
+            printf("-----------------------------------\n");
             exit(5);
         }
         
         pOut = fopen(fileName,"a");
         if(pOut == NULL)
         {
-            printf("   Cannot open keyword of mood\n");
+            printf("-----------------------------------\n");
+            printf("|   Cannot open keyword of mood   |\n");
+            printf("-----------------------------------\n");
             exit(6);
         }
             
@@ -346,7 +406,7 @@ void addKeyword(char mood[])
             {
                 check = 0;
                 printf("----------------------------------------\n");
-                printf("   - this keyword is already existed.\n");
+                printf("|  - this keyword is already existed.  |\n");
                 printf("----------------------------------------\n");
             }
         }
@@ -354,19 +414,22 @@ void addKeyword(char mood[])
         
         if(countKeywords >= MAXKEYWORDS)  /* incase keywords are more than 40 */
         {
-            printf("----------------------------------------\n");
-            printf("   - Too many keywords\n");
-            printf("----------------------------------------\n");
+            printf("--------------------------\n");
+            printf("|  - Too many keywords.  |\n");
+            printf("--------------------------\n");
         }
         else if(check == 1 && length!=0)   /* incase the keyword can be added */
         {
             fprintf(pOut,"%s\n", newKeyword);
-            printf("----------------------------------------\n");
-            printf("   -keyword is added.\n");
-            printf("----------------------------------------\n");
+            printf("------------------------\n");
+            printf("|  -keyword is added.  |\n");
+            printf("------------------------\n");
         }
         fclose(pOut);
     }
+    printf("--------------------\n");
+    printf("|     - DONE -     |\n");
+    printf("--------------------\n");
 }
 
 /* deleting keyword in selected mood
@@ -391,7 +454,9 @@ void deleteKeyword(char mood[])
     pIn = fopen(fileName, "r");
     if(pIn == NULL)
     {
-        printf("   Cannot open keyword of mood\n");
+        printf("----------------------------------\n");
+        printf("|   Cannot open keyword of mood  |\n");
+        printf("----------------------------------\n");
         exit(5);
     }
     while(fgets(lines,sizeof(lines),pIn) != NULL)  /* count keyword and keep in array */
@@ -401,13 +466,15 @@ void deleteKeyword(char mood[])
     }
     fclose(pIn);
     
-    while((deleteNum > 0) && (countKeyword>0))   /* keep delete until user type negative number  and  there's keyword */
+    while(countKeyword>0)   /* keep delete until user type negative number  and  there's keyword */
     {
         countKeyword = 0;
         pIn = fopen(fileName, "r");
         if(pIn == NULL)
         {
-            printf("   Cannot open keyword of mood\n");
+            printf("-----------------------------------\n");
+            printf("|   Cannot open keyword of mood   |\n");
+            printf("-----------------------------------\n");
             exit(5);
         }
         while(fgets(lines,sizeof(lines),pIn) != NULL)    /* count keyword and keep in array */
@@ -424,20 +491,32 @@ void deleteKeyword(char mood[])
             printf("   %d. %s\n", i+1, keywordList[i]);
         }
             
-        printf("what word you want to delete ( type down the number || type negative numder to stop): ");
+        printf("what word you want to delete (type down the number || type negative numder to stop): ");
         fgets(lines, sizeof(lines), stdin);
         sscanf(lines, "%d", &deleteNum);
         
-        if(deleteNum > countKeyword) /* incase user input non-existed number */
+        if(deleteNum < 0)
         {
-            printf("   please input existed number\n");
+            printf("--------------\n");
+            printf("|   -DONE-   |\n");
+            printf("--------------\n");
+            break;
+        }
+        
+        if(deleteNum > countKeyword  || deleteNum < 1) /* incase user input non-existed number */
+        {
+            printf("-----------------------------------\n");
+            printf("|   please input existed number   |\n");
+            printf("-----------------------------------\n");
         }
         else if((deleteNum > 0) || (deleteNum <= countKeyword) ) /* delete keyword user input */
         {
             pOut = fopen(fileName, "w");
             if(pOut == NULL)
             {
-                printf("   Cannot open keyword of mood\n");
+                printf("----------------------------------\n");
+                printf("|   Cannot open keyword of mood  |\n");
+                printf("----------------------------------\n");
                 exit(6);
             }
             for(i=0; i<countKeyword; i++)  /* rewrite keywords into file exceppt the one user choose */
@@ -460,7 +539,9 @@ void deleteKeyword(char mood[])
     }
     if(countKeyword == 0)
     {
-        printf("   there's no keyword in this mood\n");
+        printf("---------------------------------------\n");
+        printf("|   there's no keyword in this mood   |\n");
+        printf("---------------------------------------\n");
     }
     printf("\n");
 }

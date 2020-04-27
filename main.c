@@ -1,7 +1,7 @@
 /*
  * Created by Krittin Srithong (Pong) 62070503402
- * and Kittipol Neamprasertporn (Dome) 62070503404
- *
+ * Kittipol Neamprasertporn (Dome) 62070503404
+ * and Thanasit Suwanposri (Men) 62070503414
  */
 
 
@@ -16,26 +16,134 @@
 #include "linkedListMood.h"
 #include "modifyMood.h"
 
-void searchByTitleUI()
+int readSongName()
 {
-    char input[64];
-    char title[64];
-    SONG_T *pResult = NULL;
-    
-    printf("What songs you want to search: ");
-    fgets(input,sizeof(input),stdin);
-    sscanf(input,"%[^\n]",title);
-    
-    pResult = searchByTitle(title);
-    if (pResult == NULL)
+    char stringInput[128];
+    char str[READ];
+
+    int line = 1;
+
+    FILE * pSongLists = NULL;
+
+    pSongLists = fopen("Lyrics/songList.txt","r");
+    while(fgets(str,sizeof(stringInput),pSongLists) != NULL)
     {
-        printf("\nNo songs matched.\n\n");
+        printf("%d : %s",line,str);
+        line++;
     }
-    else
+    printf("\n\n");
+    fclose(pSongLists);
+    
+    return line;
+}
+
+void displaySongUI()
+{
+    char stringInput[READ];
+    char folder[64];
+    int inputSongNumber;
+    int songCount;
+    int returnCount;
+    FILE * pSongLists = NULL;
+    FILE * pLyrics = NULL;
+    char song[64];
+    
+    
+    while(1)
     {
-        printf("\nFound!\n\n");
-        /* direct to display lyrics function (have not created yet)*/
+        returnCount = readSongName();
+        returnCount--;
+        printf("Enter song number (negative number to stop): ");
+        fgets(stringInput,sizeof(stringInput),stdin);
+        sscanf(stringInput,"%d",&inputSongNumber);
+        
+        if((inputSongNumber > returnCount) || (inputSongNumber == 0))
+        {
+            printf("You entered the invalid song number.\n");
+        }
+        else if (inputSongNumber < 0)
+        {
+            break;
+        }
+        else
+        {
+            memset(stringInput, 0, sizeof(stringInput));
+            pSongLists = fopen("Lyrics/songList.txt","r");
+            songCount = 1;
+            while(fgets(stringInput,sizeof(stringInput),pSongLists) != NULL)
+            {
+                if(songCount == inputSongNumber)
+                {
+                    sscanf(stringInput,"%[^\n]",song);
+                    break;
+                }
+                songCount++;
+            }
+            fclose(pSongLists);
+            
+            sprintf(folder,"Lyrics/%s.txt",song);
+            pLyrics = fopen(folder,"r");
+            memset(stringInput, 0, sizeof(stringInput));
+            
+            printf("\n*************************************");
+            printf("\nHere's a lyrics of '%s'.\n",song);
+            printf("*************************************\n");
+            while(fgets(stringInput,sizeof(stringInput),pLyrics) != NULL)
+            {
+                printf("%s",stringInput);
+            }
+            printf("\n\n");
+            fclose(pLyrics);
+        }
     }
+}
+
+void addLyrics(char songName[])
+{
+    FILE* pLyrics = NULL;
+    char lyrics[READ];
+    char read[READ];
+    char filename[32];
+    
+    printf("\n*************************************");
+    printf("\nHow to input the lyrics.\n");
+    printf("\t1. Input lyrics line by line or paste them from google.\n");
+    printf("\t2. Hit return, then type 'done' for finished input lytics.\n");
+    printf("*************************************\n\n");
+    
+    sprintf(filename,"Lyrics/%s.txt",songName);
+    pLyrics = fopen(filename,"w");
+    printf("Enter lyrics (done to stop): ");
+    while(fgets(read,sizeof(read),stdin) != NULL)
+    {
+        sscanf(read,"%[^\n]",lyrics);
+        if(strcasecmp(lyrics,"done") == 0)
+        {
+            break;
+        }
+        fprintf(pLyrics,"%s\n",lyrics);
+    }
+    fclose(pLyrics);
+}
+
+void addNewSong()
+{
+    FILE* pSongList = NULL;
+    char newSongName[32];
+    char stringInput[64];
+    
+    pSongList = fopen("Lyrics/songList.txt","a");
+    if(pSongList == NULL)
+    {
+        printf("Error! - File cannot open.\n");
+        exit(0);
+    }
+    printf("Enter new song name: ");
+    fgets(stringInput,sizeof(stringInput),stdin);
+    sscanf(stringInput,"%[^\n]",newSongName);
+    fprintf(pSongList,"%s\n",newSongName);
+    fclose(pSongList);
+    addLyrics(newSongName);
 }
 
 void displayMoodUI()
@@ -50,7 +158,7 @@ void displayMoodUI()
     if (pMoodlist == NULL)
     {
         printf("Error! - Can't read the mood list file.\n");
-        exit(0);
+        exit(1);
     }
     
     printf("\n***** Mood List *****\n");
@@ -73,6 +181,10 @@ void displayMoodUI()
         
         searchByMood(moodChoice-1);
     }
+    else
+    {
+        printf("\nBack to Main Menu\n");
+    }
 }
 
 int main(int argc, const char * argv[])
@@ -90,9 +202,9 @@ int main(int argc, const char * argv[])
     while (1)
     {
         printf("|Main Menu|\n");
-        printf("\t1) Display all songs.\n");
+        printf("\t1) Display all songs and lyrics.\n");
         printf("\t2) Display all moods and Search songs by mood.\n");
-        printf("\t3) Search songs by title.\n");
+        printf("\t3) Add a new songs.\n");
         printf("\t4) Modify Mood.\n");
         printf("\t5) Exit the program.\n");
 
@@ -102,7 +214,7 @@ int main(int argc, const char * argv[])
 
         if (choice == 1)
         {
-            printAll();
+            displaySongUI();
         }
         else if (choice == 2)
         {
@@ -110,19 +222,19 @@ int main(int argc, const char * argv[])
         }
         else if (choice == 3)
         {
-            searchByTitleUI();
+            addNewSong();
+            
+            /*reset after added a new song*/
+            freeTree();
+            keywordsAnalysis();
         }
         else if (choice == 4)
         {
             modifyMood();
             
-            /* issue: got core dumped when called freeTree();
-             */
-            
-            //freeTree();
-            
-            /* issue: can't free tree. When analysis again, the song list will be duplicate */
-            keywordsAnalysis(); /*reset after modify*/
+            /*reset after modify*/
+            freeTree();
+            keywordsAnalysis();
         }
         else if (choice == 5)
         {
