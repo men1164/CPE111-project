@@ -6,6 +6,7 @@ joy
 hope
 happiness
 happy
+happier
 enjoy
 love
 hug
@@ -21,17 +22,14 @@ pleasure
 funny
 impressed
 glad
-joyous
 laugh
 friendship
 bright
 friend
 lighten
-vivid
 fresh
 merry
 colorful
 lively
-gleeful
 delight
 delightful

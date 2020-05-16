@@ -16,74 +16,135 @@
 #include "linkedListMood.h"
 #include "modifyMood.h"
 
-int readSongName()
+
+void searchByTitleUI()
 {
-    char stringInput[128];
-    char str[READ];
-
-    int line = 1;
-
-    FILE * pSongLists = NULL;
-
-    pSongLists = fopen("Lyrics/songList.txt","r");
-    while(fgets(str,sizeof(stringInput),pSongLists) != NULL)
-    {
-        printf("%d : %s",line,str);
-        line++;
-    }
-    printf("\n\n");
-    fclose(pSongLists);
+    char input[64];
+    char title[64];
+    SONG_T *pResult = NULL;
     
-    return line;
+    printf("What songs you want to search: ");
+    fgets(input,sizeof(input),stdin);
+    sscanf(input,"%[^\n]",title);
+    
+    pResult = searchByTitle(title);
+    if (pResult == NULL)
+    {
+        printf("\nNo songs matched.\n\n");
+    }
+    else
+    {
+        printf("\nFound!\n\n");
+        /* direct to display lyrics function (have not created yet)*/
+    }
 }
 
-void displaySongUI()
+void freeSongsName(int songsCount, char **songsName)
+{
+    int i;
+    for (i=0; i<songsCount; i++)
+    {
+        free(songsName[i]);
+    }
+    free(songsName);
+}
+
+void printMood(int moodPosition)
+{
+    FILE *pMoodlist = NULL;
+    char read[READ];
+    int i = 0;
+    
+    pMoodlist = fopen("Mood/moodList.txt", "r");
+    if (pMoodlist == NULL)
+    {
+        printf("Error! - Can't open mood list file.\n");
+        exit(0);
+    }
+    
+    while (fgets(read, sizeof(read), pMoodlist) != NULL)
+    {
+        if (i == moodPosition)
+        {
+            printf("\t- %s",read);
+        }
+        i++;
+    }
+    fclose(pMoodlist);
+}
+
+void RealizeMood(SONG_T *pSong)
+{
+    int i, moodFound = 0;
+    int moodCount = moodsItemCount();
+    for (i=0; i<moodCount; i++)
+    {
+        if (pSong->songMood[i] == 1)
+        {
+            printMood(i);
+            moodFound = 1;
+        }
+    }
+    if (moodFound == 0)
+    {
+        printf(" - This song have no mood.\n");
+    }
+}
+
+void selectSongUI(int songsCount, char **songsName)
 {
     char stringInput[READ];
     char folder[64];
     int inputSongNumber;
-    int songCount;
-    int returnCount;
-    FILE * pSongLists = NULL;
     FILE * pLyrics = NULL;
-    char song[64];
+    SONG_T *pResult = NULL;
     char decision[8];
     
     
     while(1)
     {
-        returnCount = readSongName();
-        returnCount--;
         printf("Enter song number: ");
         fgets(stringInput,sizeof(stringInput),stdin);
         sscanf(stringInput,"%d",&inputSongNumber);
         
-        if((inputSongNumber > returnCount) || (inputSongNumber <= 0))
+        if((inputSongNumber > songsCount) || (inputSongNumber <= 0))
         {
             printf("You entered the invalid song number.\n");
         }
         else
         {
-            memset(stringInput, 0, sizeof(stringInput));
-            pSongLists = fopen("Lyrics/songList.txt","r");
-            songCount = 1;
-            while(fgets(stringInput,sizeof(stringInput),pSongLists) != NULL)
+            inputSongNumber = inputSongNumber - 1;
+            songsName[inputSongNumber][0] = toupper(songsName[inputSongNumber][0]);
+            pResult = searchByTitle(songsName[inputSongNumber]);
+            if (pResult == NULL)
             {
-                if(songCount == inputSongNumber)
-                {
-                    sscanf(stringInput,"%[^\n]",song);
-                    break;
-                }
-                songCount++;
+                printf("No songs found in database.\n");
+                exit(1);
             }
-            fclose(pSongLists);
             
-            sprintf(folder,"Lyrics/%s.txt",song);
-            pLyrics = fopen(folder,"r");
-            memset(stringInput, 0, sizeof(stringInput));
+            if (pResult->lowerCaseMark == 1)
+            {
+                sprintf(folder, "Lyrics/%s.txt",pResult->originalName);
+                pLyrics = fopen(folder,"r");
+                memset(stringInput, 0, sizeof(stringInput));
+
+                printf("\n*************************************");
+                printf("\nHere's a lyrics of '%s'.\n",pResult->originalName);
+            }
+            else
+            {
+                sprintf(folder,"Lyrics/%s.txt",pResult->songName);
+                pLyrics = fopen(folder,"r");
+                memset(stringInput, 0, sizeof(stringInput));
+
+                printf("\n*************************************");
+                printf("\nHere's a lyrics of '%s'.\n",pResult->songName);
+            }
             
-            printf("\n*************************************");
-            printf("\nHere's a lyrics of '%s'.\n",song);
+            printf("Mood(s) in this song:\n");
+
+            RealizeMood(pResult);
+
             printf("*************************************\n");
             while(fgets(stringInput,sizeof(stringInput),pLyrics) != NULL)
             {
@@ -91,11 +152,11 @@ void displaySongUI()
             }
             printf("\n\n");
             fclose(pLyrics);
-            
+
             memset(stringInput, 0, sizeof(stringInput));
             memset(decision, 0, sizeof(decision));
-            
-            printf("\nContinue choosing another song? (Yes|No): ");
+
+            printf("\nContinue looking other song? (Yes|No): ");
             fgets(stringInput, sizeof(stringInput), stdin);
             sscanf(stringInput, "%s",decision);
             if (strcasecmp(decision, "No") == 0)
@@ -105,6 +166,42 @@ void displaySongUI()
             }
         }
     }
+    freeSongsName(songsCount,songsName);
+}
+
+void displayAllSongsUI()
+{
+    char stringInput[128];
+    char str[READ];
+    char **songsName;
+    int stringLenght = 64;
+    int i;
+    FILE * pSongLists = NULL;
+    int songsCount = 0;
+
+    pSongLists = fopen("Lyrics/songList.txt","r");
+    songsCount = songsListCount();
+    songsName = (char **) calloc(songsCount, sizeof(char*));
+    
+    for (i=0; i<songsCount; i++)
+    {
+        songsName[i] = (char *) calloc(stringLenght, sizeof(char));
+    }
+    
+    printf("\n*************************************");
+    printf("\nHere are all songs list.\n");
+    printf("*************************************\n");
+
+    i = 0;
+    while(fgets(str,sizeof(stringInput),pSongLists) != NULL)
+    {
+        sscanf(str, "%[^\n]", songsName[i]);
+        printf("%d : %s",i+1,str);
+        i++;
+    }
+    printf("\n\n");
+    fclose(pSongLists);
+    selectSongUI(songsCount,songsName);
 }
 
 void addLyrics(char songName[])
@@ -117,7 +214,7 @@ void addLyrics(char songName[])
     printf("\n*************************************");
     printf("\nHow to input the lyrics.\n");
     printf("\t1. Input lyrics line by line or paste them from google.\n");
-    printf("\t2. Hit return, then type 'done' for finished input lytics.\n");
+    printf("\t2. Hit return, then type 'done' for finished input lyrics.\n");
     printf("*************************************\n\n");
     
     sprintf(filename,"Lyrics/%s.txt",songName);
@@ -144,14 +241,17 @@ void addNewSong()
     pSongList = fopen("Lyrics/songList.txt","a");
     if(pSongList == NULL)
     {
-        printf("Error! - File cannot open.\n");
-        exit(0);
+        printf("Error! - Can't open the songList file.\n");
+        exit(2);
     }
+    
     printf("Enter new song name: ");
     fgets(stringInput,sizeof(stringInput),stdin);
     sscanf(stringInput,"%[^\n]",newSongName);
+    
     fprintf(pSongList,"%s\n",newSongName);
     fclose(pSongList);
+    
     addLyrics(newSongName);
 }
 
@@ -167,7 +267,7 @@ void displayMoodUI()
     if (pMoodlist == NULL)
     {
         printf("Error! - Can't read the mood list file.\n");
-        exit(1);
+        exit(3);
     }
     
     printf("\n***** Mood List *****\n");
@@ -187,13 +287,15 @@ void displayMoodUI()
         printf("Enter the number of mood that you want : ");
         fgets(read, sizeof(read), stdin);
         sscanf(read, "%d",&moodChoice);
-        
+        printf("\n");
         searchByMood(moodChoice-1);
+        printf("\n");
     }
     else
     {
         printf("\nBack to Main Menu\n");
     }
+    fclose(pMoodlist);
 }
 
 int main(int argc, const char * argv[])
@@ -201,7 +303,7 @@ int main(int argc, const char * argv[])
     char input[10];
     int choice;
     
-    /*call the function to analyze the song and create hash table*/
+    /* call the function to analyze the song */
     keywordsAnalysis();
     
     printf("\n\n************************************************************\n\n");
@@ -223,7 +325,7 @@ int main(int argc, const char * argv[])
 
         if (choice == 1)
         {
-            displaySongUI();
+            displayAllSongsUI();
         }
         else if (choice == 2)
         {
@@ -231,11 +333,13 @@ int main(int argc, const char * argv[])
         }
         else if (choice == 3)
         {
+//            searchByTitleUI();
             addNewSong();
-            
+
             /*reset after added a new song*/
             freeTree();
             keywordsAnalysis();
+//            printAll();
         }
         else if (choice == 4)
         {

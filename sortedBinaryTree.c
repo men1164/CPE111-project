@@ -4,7 +4,7 @@
  *
  *
  * Based on Lab 6 code.
- * This fle use for create a sorted binary tree to store the songs.
+ * This file use for create a sorted binary tree to store the songs.
  */
 
 #include <stdio.h>
@@ -69,11 +69,11 @@ SONG_T *recursiveSearch(SONG_T *pCurrent, char searchSong[])
     
     if (pCurrent != NULL)
     {
-        if (strcasecmp(pCurrent->songName, searchSong) == 0)
+        if (strcasecmp(searchSong, pCurrent->songName) == 0)
         {
             pResult = pCurrent;
         }
-        else if (strcasecmp(pCurrent->songName, searchSong) < 0)
+        else if (strcasecmp(searchSong, pCurrent->songName) < 0)
         {
             pResult = recursiveSearch(pCurrent->left, searchSong);
         }

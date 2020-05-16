@@ -4,7 +4,7 @@
 *
 *
 * Based on Lab 6 code.
-* This fle use for create a sorted binary tree to store the songs.
+* This file use for create a sorted binary tree to store the songs.
 */
 
 #ifndef sortedBinaryTree_h

@@ -16,11 +16,12 @@
 #include "sortedBinaryTree.h"
 #include "linkedListMood.h"
 
-char saveMood[32];
-char keywordsString[MAXMOODS][KEYWORDSLEN];
-static int moodCount = 0;
+char keywordsString[MAXMOODS][KEYWORDSLEN];     /* for combining all keywords each mmod */
+static int moodsCount = 0;
+static int songsCount;
+int songsNoMood ;
 
-/* This function use for separate the lyrics into word by word and compare with keywords each mood*/
+/* This function use for separate the lyrics into word by word and compare with keywords in each mood */
 void keywordsAnalysis()
 {
     FILE *pSongList = NULL;
@@ -31,7 +32,7 @@ void keywordsAnalysis()
     int i;
     int statResult, fileSize;
     struct stat fileStatus;
-    char *lyricsArray, *token, *test;
+    char *lyricsArray, *token;
     char toSearch[128];
 
     initualizeMoodArray();
@@ -43,7 +44,8 @@ void keywordsAnalysis()
     }
     
     combineKeywords();
-    
+    songsCount = 0;
+    songsNoMood = 0;
     while (fgets(read, sizeof(read), pSongList) != NULL)
     {
         memset(keywordsCount, 0, sizeof(keywordsCount));
@@ -71,19 +73,16 @@ void keywordsAnalysis()
             printf("Error! - Can't open the lyrics file -> '%s'.\n", songName);
             exit(3);
         }
-        printf("***************");
-        printf("\n%s\n",songName);
-        printf("***************\n");
+        
         while (fgets(lyricsArray, fileSize+1, pLyrics) != NULL)
         {
             token = strtok(lyricsArray, " ,.!?:;()&\n\r");
             while (token != NULL)
             {
                 sprintf(toSearch, "|%s|", token);
-                for (i=0; i<moodCount; i++)
+                for (i=0; i<moodsCount; i++)
                 {
-                    test = strstr(keywordsString[i], toSearch);
-                    if (test != NULL)
+                    if (strstr(keywordsString[i], toSearch) != NULL)
                     {
                         keywordsCount[i]++;
                     }
@@ -91,42 +90,60 @@ void keywordsAnalysis()
                 token = strtok(NULL, " ,.!?:;()&\n\r");
             }
         }
-        
-        for (i=0; i<moodCount; i++)
-        {
-            printf("\t%d:Found %d words\n", i+1, keywordsCount[i]);
-        }
 
         moodAnalysis(keywordsCount, songName);
         fclose(pLyrics);
+        songsCount++;
     }
+    printf("\n\t%d out of %d Songs have no mood.\n",songsNoMood,songsCount);
     fclose(pSongList);
 }
 
-/* Check if found keywords more than 5 words each mood, set the mood for that song
+/* Check if found keywords more than 4 words each mood, set the mood for that song
  * Store song info into binary tree and mood to linked list
  */
 void moodAnalysis(int keywordsFound[], char songName[]) {
     
     int i;
     SONG_T *song = NULL;
+    int moodFound = 0;
 
     song = (SONG_T *) calloc(1, sizeof(SONG_T));
     
-    strcpy(song->songName, songName);
-    
-    for (i=0; i<moodCount; i++)
+    if (islower(songName[0]) != 0)
     {
-        if (keywordsFound[i] > 5)
+        song->lowerCaseMark = 1;
+        strcpy(song->originalName, songName);
+        songName[0] = toupper(songName[0]);
+        strcpy(song->songName, songName);
+    }
+    else
+    {
+        strcpy(song->songName, songName);
+        song->lowerCaseMark = 0;
+    }
+    
+    for (i=0; i<moodsCount; i++)
+    {
+        if (keywordsFound[i] > 4)
         {
+            moodFound = 1;
             song->songMood[i] = 1;
         }
+    }
+    
+    if (moodFound == 0)
+    {
+        printf("NO MOOD FOUND - %s\n", songName);
+        songsNoMood++;
     }
     checkRoot(song);
     linkedListMood(song);
 }
 
-/* Use to combine all keywords for comparing with lyrics */
+/* Use to combine all keywords for comparing with lyrics
+ * and use '|' as a delimeter to separate each keywords
+ */
 void combineKeywords()
 {
     FILE *pMoodlist = NULL;
@@ -167,7 +184,7 @@ void combineKeywords()
             }
             else
             {
-                printf("Warning! - Too many keywords -> %s.\n",mood);
+                printf("Warning! - Too many keywords in mood -> %s.\n",mood);
                 break;
             }
         }
@@ -175,11 +192,16 @@ void combineKeywords()
         i++;
         fclose(pEachMood);
     }
-    moodCount = i;
+    moodsCount = i;
     fclose(pMoodlist);
 }
 
 int moodsItemCount()
 {
-    return moodCount;
+    return moodsCount;
+}
+
+int songsListCount()
+{
+    return songsCount;
 }
