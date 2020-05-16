@@ -85,24 +85,6 @@ SONG_T *recursiveSearch(SONG_T *pCurrent, char searchSong[])
     return pResult;
 }
 
-void printAll()
-{
-    recursivePrint(rootSong);
-}
-
-void recursivePrint(SONG_T *pCurrent)
-{
-    if (pCurrent->left != NULL)
-    {
-        recursivePrint(pCurrent->left);
-    }
-    printf("%s\n",pCurrent->songName);
-    if (pCurrent->right != NULL)
-    {
-        recursivePrint(pCurrent->right);
-    }
-}
-
 void freeTree()
 {
     recursiveFree(rootSong);

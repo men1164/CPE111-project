@@ -16,8 +16,6 @@ void checkRoot(SONG_T *song);
 void insertNode(SONG_T *pCurrent, SONG_T *pNew);
 SONG_T *searchByTitle(char searchSong[]);
 SONG_T *recursiveSearch(SONG_T *pCurrent, char searchSong[]);
-void printAll();
-void recursivePrint(SONG_T *pCurrent);
 void freeTree();
 void recursiveFree(SONG_T *pCurrent);
 

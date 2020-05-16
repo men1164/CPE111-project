@@ -4,8 +4,6 @@
  * and Thanasit Suwanposri (Men) 62070503414
  */
 
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -16,28 +14,6 @@
 #include "linkedListMood.h"
 #include "modifyMood.h"
 
-
-void searchByTitleUI()
-{
-    char input[64];
-    char title[64];
-    SONG_T *pResult = NULL;
-    
-    printf("What songs you want to search: ");
-    fgets(input,sizeof(input),stdin);
-    sscanf(input,"%[^\n]",title);
-    
-    pResult = searchByTitle(title);
-    if (pResult == NULL)
-    {
-        printf("\nNo songs matched.\n\n");
-    }
-    else
-    {
-        printf("\nFound!\n\n");
-        /* direct to display lyrics function (have not created yet)*/
-    }
-}
 
 void freeSongsName(int songsCount, char **songsName)
 {
@@ -333,13 +309,11 @@ int main(int argc, const char * argv[])
         }
         else if (choice == 3)
         {
-//            searchByTitleUI();
             addNewSong();
 
             /*reset after added a new song*/
             freeTree();
             keywordsAnalysis();
-//            printAll();
         }
         else if (choice == 4)
         {
