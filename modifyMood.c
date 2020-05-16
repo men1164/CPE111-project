@@ -11,6 +11,10 @@
 #include "modifyMood.h"
 #include "analyzeMood.h" /*include MAXMOODS define value*/
 
+
+/*
+ * Main menu of modify mood
+ */
 void modifyMood()
 {
     char input[32];
@@ -62,7 +66,7 @@ void modifyMood()
 
 /* adding new mood to mood list
  *
-*/
+ */
 void addMood()
 {
     char lines[32];
@@ -354,7 +358,7 @@ void adjustKeyword()
 
 /* adding new keywords into selected mood
  *
-*/
+ */
 void addKeyword(char mood[])
 {
     char input[64];
@@ -435,7 +439,7 @@ void addKeyword(char mood[])
 
 /* deleting keyword in selected mood
  *
-*/
+ */
 void deleteKeyword(char mood[])
 {
     char lines[64];

@@ -15,6 +15,7 @@
 #include "modifyMood.h"
 
 
+/* To free all songs name that allocate memory */
 void freeSongsName(int songsCount, char **songsName)
 {
     int i;
@@ -25,6 +26,13 @@ void freeSongsName(int songsCount, char **songsName)
     free(songsName);
 }
 
+
+/*
+ * Argument
+ *  - moodPosition      for display mood name if found the match position.
+ *
+ * This function use to display mood name that its position match to moodPosition.
+ */
 void printMood(int moodPosition)
 {
     FILE *pMoodlist = NULL;
@@ -49,6 +57,13 @@ void printMood(int moodPosition)
     fclose(pMoodlist);
 }
 
+/*
+ * Argument
+ * - pSong      to get the data of songs for realize the mood.
+ *
+ * This function use for loop to realize any mood
+ * in this song, then call the printMood() if found.
+ */
 void RealizeMood(SONG_T *pSong)
 {
     int i, moodFound = 0;
@@ -67,6 +82,17 @@ void RealizeMood(SONG_T *pSong)
     }
 }
 
+
+/*
+ * Argument
+ *  - songCount     for checking error with the choice that user input.
+ *  - **songName    to get all of the songs name for display.
+ *
+ * This function will let user input the song choice
+ * to display the lyrics and mood in that song.
+ * To display the mood, it will call RealizeMood() to get
+ * the mood name.
+ */
 void selectSongUI(int songsCount, char **songsName)
 {
     char stringInput[READ];
@@ -98,6 +124,7 @@ void selectSongUI(int songsCount, char **songsName)
                 exit(1);
             }
             
+            /* check if it have original lowercase title */
             if (pResult->lowerCaseMark == 1)
             {
                 sprintf(folder, "Lyrics/%s.txt",pResult->originalName);
@@ -145,6 +172,11 @@ void selectSongUI(int songsCount, char **songsName)
     freeSongsName(songsCount,songsName);
 }
 
+
+/* Use to display all the song lists directly
+ * from the text file.
+ * And allocate memory to keep all the songs' name.
+ */
 void displayAllSongsUI()
 {
     char stringInput[128];
@@ -180,6 +212,14 @@ void displayAllSongsUI()
     selectSongUI(songsCount,songsName);
 }
 
+/*
+ * Argument
+ *  - songName[]    to receive the new song name.
+ *
+ * This function will let user input
+ * lyrics of the songs, line by line.
+ * Until user type 'done' to finished input.
+ */
 void addLyrics(char songName[])
 {
     FILE* pLyrics = NULL;
@@ -208,6 +248,10 @@ void addLyrics(char songName[])
     fclose(pLyrics);
 }
 
+/* This function will open the songsList.txt as append mode
+ * to let user add a new song name.
+ * Then call the addLyrics function.
+ */
 void addNewSong()
 {
     FILE* pSongList = NULL;
@@ -231,6 +275,14 @@ void addNewSong()
     addLyrics(newSongName);
 }
 
+
+/* displayMoodUI function is use as
+ * user interface for display the mood,
+ * then ask user to search songs by moods or not.
+ *
+ * If want, it will call searchByMood() in linkedListMood.c
+ * to display any songs that exists in that mood.
+ */
 void displayMoodUI()
 {
     FILE *pMoodlist = NULL;
@@ -274,12 +326,18 @@ void displayMoodUI()
     fclose(pMoodlist);
 }
 
+
+/* Main function
+ *
+ * Using for main menu interface and let
+ * user select what function user want to do.
+ */
 int main(int argc, const char * argv[])
 {
     char input[10];
     int choice;
     
-    /* call the function to analyze the song */
+    /* call this function to analyze the song */
     keywordsAnalysis();
     
     printf("\n\n************************************************************\n\n");
@@ -332,6 +390,9 @@ int main(int argc, const char * argv[])
             printf("Please enter only number 1 to 5 !\n");
         }
     }
+    /* free everything before close the program */
+    freeTree();
+    initualizeMoodArray();
     printf("Goodbye!\n");
     return 0;
 }

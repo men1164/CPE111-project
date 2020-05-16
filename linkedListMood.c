@@ -13,9 +13,13 @@
 
 #include "linkedListMood.h"
 
-SONG_ITEM_T *listHead[MAXMOODS];
-SONG_ITEM_T *listTail[MAXMOODS];
+SONG_ITEM_T *listHead[MAXMOODS];    /* Head list, set as array to keep separate linked list each mood */
+SONG_ITEM_T *listTail[MAXMOODS];    /* Tail list, set as array to keep separate linked list each mood */
 
+
+/*
+ * This function is for set all of head and tail to NULL.
+ */
 void initualizeMoodArray()
 {
     int i;
@@ -27,6 +31,12 @@ void initualizeMoodArray()
     }
 }
 
+/*
+ * Argument
+ *  - song      songs' structure to keep into an item in linked list.
+ * This function use for check the songMood, if 1, put into a linked list
+ * of that mood.
+ */
 void linkedListMood(SONG_T *song)
 {
     int i;
@@ -54,6 +64,12 @@ void linkedListMood(SONG_T *song)
     }
 }
 
+/*
+ * Argument
+ *  - moodPosition      to set the index of the array list.
+ * This function will display the songs in that mood,
+ * then ask user that they want to display lyrics or not.
+ */
 void searchByMood(int moodPosition)
 {
     SONG_ITEM_T *currentSong = listHead[moodPosition];
@@ -95,9 +111,16 @@ void searchByMood(int moodPosition)
     {
         printf("\nBack to Main Menu.\n");
     }
-    
 }
 
+
+/*
+ * Argument
+ *  - moodPosition      to set the index of the array list.
+ *  - songFoundInMood   to check error of input from user.
+ * This function will let user input the number of song that user
+ * want to display the lyrics.
+ */
 void selectSongFromMood(int moodPosition, int songFoundInMood)
 {
     SONG_ITEM_T *currentSong = listHead[moodPosition];

@@ -17,11 +17,15 @@
 #include "linkedListMood.h"
 
 char keywordsString[MAXMOODS][KEYWORDSLEN];     /* for combining all keywords each mmod */
-static int moodsCount = 0;
-static int songsCount;
-int songsNoMood ;
+static int moodsCount = 0;                      /* count of all moods */
+static int songsCount;                          /* count of all songs */
+int songsNoMood;                                /* count of song that have no mood */
 
-/* This function use for separate the lyrics into word by word and compare with keywords in each mood */
+/*
+ * This function use for separate the lyrics into word by word,
+ * then add delimeter to each word ('|')
+ * and compare with keywordsString in each mood.
+ */
 void keywordsAnalysis()
 {
     FILE *pSongList = NULL;
@@ -31,11 +35,12 @@ void keywordsAnalysis()
     int keywordsCount[MAXMOODS] = {0};
     int i;
     int statResult, fileSize;
-    struct stat fileStatus;
+    struct stat fileStatus;     /* stat structure for get the file size to allocate */
     char *lyricsArray, *token;
     char toSearch[128];
 
-    initualizeMoodArray();
+    initualizeMoodArray(); /* set the linked list of mood array to NULL */
+    
     pSongList = fopen("Lyrics/songList.txt", "r");
     if (pSongList == NULL)
     {
@@ -99,7 +104,11 @@ void keywordsAnalysis()
     fclose(pSongList);
 }
 
-/* Check if found keywords more than 4 words each mood, set the mood for that song
+/*
+ * Argument
+ *  - keywordsFound     to check the count keywords found in each mood.
+ *  - songName          for keep into SONG_T structure
+ * Check if found keywords more than 4 words each mood, set the mood for that song
  * Store song info into binary tree and mood to linked list
  */
 void moodAnalysis(int keywordsFound[], char songName[]) {
