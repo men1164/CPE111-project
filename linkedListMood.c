@@ -43,14 +43,15 @@ void linkedListMood(SONG_T *song)
     int moodCount;
     SONG_ITEM_T *songItem = NULL;
 
-    songItem = (SONG_ITEM_T *) calloc(1, sizeof(SONG_ITEM_T));
-    songItem->song = song;
+    
 
     moodCount = moodsItemCount();
     for (i=0; i<moodCount; i++)
     {
-        if (songItem->song->songMood[i] == 1)
+        if (song->songMood[i] == 1)
         {
+            songItem = (SONG_ITEM_T *) calloc(1, sizeof(SONG_ITEM_T));
+            songItem->song = song;
             if (listHead[i] == NULL)
             {
                 listHead[i] = listTail[i] = songItem;
