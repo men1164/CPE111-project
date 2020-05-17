@@ -124,22 +124,18 @@ void selectSongUI(int songsCount, char **songsName)
                 exit(1);
             }
             
+            sprintf(folder, "Lyrics/%s",pResult->fileName);
+            pLyrics = fopen(folder,"r");
+            memset(stringInput, 0, sizeof(stringInput));
+            
             /* check if it have original lowercase title */
             if (pResult->lowerCaseMark == 1)
             {
-                sprintf(folder, "Lyrics/%s.txt",pResult->originalName);
-                pLyrics = fopen(folder,"r");
-                memset(stringInput, 0, sizeof(stringInput));
-
                 printf("\n*************************************");
                 printf("\nHere's a lyrics of '%s'.\n",pResult->originalName);
             }
             else
             {
-                sprintf(folder,"Lyrics/%s.txt",pResult->songName);
-                pLyrics = fopen(folder,"r");
-                memset(stringInput, 0, sizeof(stringInput));
-
                 printf("\n*************************************");
                 printf("\nHere's a lyrics of '%s'.\n",pResult->songName);
             }
@@ -182,6 +178,7 @@ void displayAllSongsUI()
     char stringInput[128];
     char str[READ];
     char **songsName;
+    char dummy[32];
     int stringLenght = 64;
     int i;
     FILE * pSongLists = NULL;
@@ -203,8 +200,8 @@ void displayAllSongsUI()
     i = 0;
     while(fgets(str,sizeof(stringInput),pSongLists) != NULL)
     {
-        sscanf(str, "%[^\n]", songsName[i]);
-        printf("%d : %s",i+1,str);
+        sscanf(str, "%s %[^\n]",dummy, songsName[i]);
+        printf("%d : %s\n",i+1,songsName[i]);
         i++;
     }
     printf("\n\n");
@@ -215,26 +212,31 @@ void displayAllSongsUI()
 /*
  * Argument
  *  - songName[]    to receive the new song name.
- *
+ *  - fileName[]    to receive the text file name.
  * This function will let user input
  * lyrics of the songs, line by line.
  * Until user type 'done' to finished input.
  */
-void addLyrics(char songName[])
+void addLyrics(char songName[], char fileName[])
 {
     FILE* pLyrics = NULL;
     char lyrics[READ];
     char read[READ];
-    char filename[32];
+    char songDirectory[32];
     
     printf("\n*************************************");
     printf("\nHow to input the lyrics.\n");
-    printf("\t1. Input lyrics line by line or paste them from google.\n");
+    printf("\t1. Input lyrics line by line or copy/paste them from google.\n");
     printf("\t2. Hit return, then type 'done' for finished input lyrics.\n");
     printf("*************************************\n\n");
     
-    sprintf(filename,"Lyrics/%s.txt",songName);
-    pLyrics = fopen(filename,"w");
+    sprintf(songDirectory,"Lyrics/%s",fileName);
+    pLyrics = fopen(songDirectory,"w");
+    if (pLyrics == NULL)
+    {
+        printf("Error! - Can't write the new file into Lyrics directory.\n");
+        exit(2);
+    }
     printf("Enter lyrics (done to stop): ");
     while(fgets(read,sizeof(read),stdin) != NULL)
     {
@@ -257,22 +259,39 @@ void addNewSong()
     FILE* pSongList = NULL;
     char newSongName[32];
     char stringInput[64];
+    char newFileName[32];
+    char fileName[32];
+    int i;
     
     pSongList = fopen("Lyrics/songList.txt","a");
     if(pSongList == NULL)
     {
         printf("Error! - Can't open the songList file.\n");
-        exit(2);
+        exit(3);
     }
     
     printf("Enter new song name: ");
     fgets(stringInput,sizeof(stringInput),stdin);
     sscanf(stringInput,"%[^\n]",newSongName);
+
+    memset(stringInput, 0, sizeof(stringInput));
+    printf("Enter the file name to hold '%s' lyrics (no spacebar or any special characters): ",newSongName);
+    fgets(stringInput, sizeof(stringInput), stdin);
+    sscanf(stringInput, "%s",newFileName);
     
-    fprintf(pSongList,"%s\n",newSongName);
+    for (i=0; i<strlen(newFileName); i++)
+    {
+        if (isupper(newFileName[i]) != 0)
+        {
+            newFileName[i] = tolower(newFileName[i]);
+        }
+    }
+    
+    sprintf(fileName, "%s.txt",newFileName);
+    fprintf(pSongList,"%s %s\n",fileName,newSongName);
     fclose(pSongList);
     
-    addLyrics(newSongName);
+    addLyrics(newSongName,fileName);
 }
 
 
@@ -295,7 +314,7 @@ void displayMoodUI()
     if (pMoodlist == NULL)
     {
         printf("Error! - Can't read the mood list file.\n");
-        exit(3);
+        exit(4);
     }
     
     printf("\n***** Mood List *****\n");

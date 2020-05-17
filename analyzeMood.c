@@ -31,7 +31,7 @@ void keywordsAnalysis()
     FILE *pSongList = NULL;
     FILE *pLyrics = NULL;
     char read[READ];
-    char songName[32], fileName[64];
+    char songName[32], songDirectory[64], fileName[32];
     int keywordsCount[MAXMOODS] = {0};
     int i;
     int statResult, fileSize;
@@ -54,51 +54,52 @@ void keywordsAnalysis()
     while (fgets(read, sizeof(read), pSongList) != NULL)
     {
         memset(keywordsCount, 0, sizeof(keywordsCount));
-        sscanf(read, "%[^\n]",songName);
-        sprintf(fileName, "Lyrics/%s.txt", songName);
+        sscanf(read, "%s %[^\n]",fileName,songName);
+        sprintf(songDirectory, "Lyrics/%s", fileName);
         
-        statResult = stat(fileName, &fileStatus);
+        statResult = stat(songDirectory, &fileStatus);
         if (statResult != 0)
         {
-            printf("Error! - Can't stat the lyrics file size -> '%s'.\n", songName);
-            exit(1);
+            printf("Warning! - Can't find the lyrics file for '%s'.\n", songName);
+            /*skip the the file*/
         }
-
-        fileSize = (int) fileStatus.st_size;
-        lyricsArray = (char *) calloc(fileSize+1, sizeof(char));
-        if (lyricsArray == NULL)
+        else
         {
-            printf("Dynamically allocate lyricsArray failed.\n");
-            exit(2);
-        }
-        
-        pLyrics = fopen(fileName, "r");
-        if (pLyrics == NULL)
-        {
-            printf("Error! - Can't open the lyrics file -> '%s'.\n", songName);
-            exit(3);
-        }
-        
-        while (fgets(lyricsArray, fileSize+1, pLyrics) != NULL)
-        {
-            token = strtok(lyricsArray, " ,.!?:;()&\n\r");
-            while (token != NULL)
+            fileSize = (int) fileStatus.st_size;
+            lyricsArray = (char *) calloc(fileSize+1, sizeof(char));
+            if (lyricsArray == NULL)
             {
-                sprintf(toSearch, "|%s|", token);
-                for (i=0; i<moodsCount; i++)
-                {
-                    if (strstr(keywordsString[i], toSearch) != NULL)
-                    {
-                        keywordsCount[i]++;
-                    }
-                }
-                token = strtok(NULL, " ,.!?:;()&\n\r");
+                printf("Dynamically allocate lyricsArray failed.\n");
+                exit(1);
             }
+            
+            pLyrics = fopen(songDirectory, "r");
+            if (pLyrics == NULL)
+            {
+                printf("Error! - Can't read the lyrics file -> '%s'.\n", songName);
+                exit(2);
+            }
+            
+            while (fgets(lyricsArray, fileSize+1, pLyrics) != NULL)
+            {
+                token = strtok(lyricsArray, " ,.!?:;()&\n\r");
+                while (token != NULL)
+                {
+                    sprintf(toSearch, "|%s|", token);
+                    for (i=0; i<moodsCount; i++)
+                    {
+                        if (strstr(keywordsString[i], toSearch) != NULL)
+                        {
+                            keywordsCount[i]++;
+                        }
+                    }
+                    token = strtok(NULL, " ,.!?:;()&\n\r");
+                }
+            }
+            moodAnalysis(keywordsCount, songName, fileName);
+            fclose(pLyrics);
+            songsCount++;
         }
-
-        moodAnalysis(keywordsCount, songName);
-        fclose(pLyrics);
-        songsCount++;
     }
     printf("\n\t%d out of %d Songs have no mood.\n",songsNoMood,songsCount);
     fclose(pSongList);
@@ -108,16 +109,18 @@ void keywordsAnalysis()
  * Argument
  *  - keywordsFound     to check the count keywords found in each mood.
  *  - songName          for keep into SONG_T structure
+ *  - fileName          for keep the file name of the song to structure.
  * Check if found keywords more than 4 words each mood, set the mood for that song
  * Store song info into binary tree and mood to linked list
  */
-void moodAnalysis(int keywordsFound[], char songName[]) {
-    
+void moodAnalysis(int keywordsFound[], char songName[], char fileName[])
+{
     int i;
     SONG_T *song = NULL;
     int moodFound = 0;
 
     song = (SONG_T *) calloc(1, sizeof(SONG_T));
+    strcpy(song->fileName, fileName);
     
     if (islower(songName[0]) != 0)
     {

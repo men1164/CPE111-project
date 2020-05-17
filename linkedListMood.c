@@ -154,15 +154,14 @@ void selectSongFromMood(int moodPosition, int songFoundInMood)
             {
                 if (i == choice)
                 {
+                    sprintf(folder, "Lyrics/%s",currentSong->song->fileName);
                     if (currentSong->song->lowerCaseMark == 1)
                     {
-                        sprintf(folder, "Lyrics/%s.txt",currentSong->song->originalName);
                         printf("\n***************************\n");
                         printf("Lyrics of '%s'\n",currentSong->song->originalName);
                     }
                     else
                     {
-                        sprintf(folder, "Lyrics/%s.txt",currentSong->song->songName);
                         printf("\n***************************\n");
                         printf("Lyrics of '%s'\n",currentSong->song->songName);
                     }
