@@ -53,6 +53,7 @@ void keywordsAnalysis()
     songsNoMood = 0;
     while (fgets(read, sizeof(read), pSongList) != NULL)
     {
+        /* check for empty line */
         if (read[0] != '\n')
         {
             memset(keywordsCount, 0, sizeof(keywordsCount));
