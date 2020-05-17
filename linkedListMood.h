@@ -17,7 +17,7 @@
 /*
  * This function is for set all of head and tail to NULL.
  */
-void initualizeMoodArray();
+void initializeMoodArray();
 
 /*
  * Argument

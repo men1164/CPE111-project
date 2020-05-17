@@ -415,7 +415,7 @@ int main(int argc, const char * argv[])
     }
     /* free everything before close the program */
     freeTree();
-    initualizeMoodArray();
+    initializeMoodArray();
     printf("Goodbye!\n");
     return 0;
 }

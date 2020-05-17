@@ -16,7 +16,7 @@
  * This function use for set the rootSong if it NULL.
  * For the first node, otherwise it will call insertNode().
  */
-void checkRoot(SONG_T *song);
+void initializeRoot(SONG_T *song);
 
 /*
  * This function will insert the new node

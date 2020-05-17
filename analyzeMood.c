@@ -39,7 +39,7 @@ void keywordsAnalysis()
     char *lyricsArray, *token;
     char toSearch[128];
 
-    initualizeMoodArray(); /* set the linked list of mood array to NULL */
+    initializeMoodArray(); /* set the linked list of mood array to NULL */
     
     pSongList = fopen("Lyrics/songList.txt", "r");
     if (pSongList == NULL)
@@ -153,7 +153,7 @@ void moodAnalysis(int keywordsFound[], char songName[], char fileName[])
         printf("NO MOOD FOUND - %s\n", songName);
         songsNoMood++;
     }
-    checkRoot(song);
+    initializeRoot(song);
     linkedListMood(song);
 }
 

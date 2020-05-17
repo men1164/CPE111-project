@@ -20,7 +20,7 @@ SONG_ITEM_T *listTail[MAXMOODS];    /* Tail list, set as array to keep separate 
 /*
  * This function is for set all of head and tail to NULL.
  */
-void initualizeMoodArray()
+void initializeMoodArray()
 {
     int i;
     
