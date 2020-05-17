@@ -53,52 +53,55 @@ void keywordsAnalysis()
     songsNoMood = 0;
     while (fgets(read, sizeof(read), pSongList) != NULL)
     {
-        memset(keywordsCount, 0, sizeof(keywordsCount));
-        sscanf(read, "%s %[^\n]",fileName,songName);
-        sprintf(songDirectory, "Lyrics/%s", fileName);
-        
-        statResult = stat(songDirectory, &fileStatus);
-        if (statResult != 0)
+        if (read[0] != '\n')
         {
-            printf("Warning! - Can't find the lyrics file for '%s'.\n", songName);
-            /*skip the the file*/
-        }
-        else
-        {
-            fileSize = (int) fileStatus.st_size;
-            lyricsArray = (char *) calloc(fileSize+1, sizeof(char));
-            if (lyricsArray == NULL)
-            {
-                printf("Dynamically allocate lyricsArray failed.\n");
-                exit(1);
-            }
+            memset(keywordsCount, 0, sizeof(keywordsCount));
+            sscanf(read, "%s %[^\n]",fileName,songName);
+            sprintf(songDirectory, "Lyrics/%s", fileName);
             
-            pLyrics = fopen(songDirectory, "r");
-            if (pLyrics == NULL)
+            statResult = stat(songDirectory, &fileStatus);
+            if (statResult != 0)
             {
-                printf("Error! - Can't read the lyrics file -> '%s'.\n", songName);
-                exit(2);
+                printf("Warning! - Can't find the lyrics file for '%s'.\n", songName);
+                /*skip the the file*/
             }
-            
-            while (fgets(lyricsArray, fileSize+1, pLyrics) != NULL)
+            else
             {
-                token = strtok(lyricsArray, " ,.!?:;()&\n\r");
-                while (token != NULL)
+                fileSize = (int) fileStatus.st_size;
+                lyricsArray = (char *) calloc(fileSize+1, sizeof(char));
+                if (lyricsArray == NULL)
                 {
-                    sprintf(toSearch, "|%s|", token);
-                    for (i=0; i<moodsCount; i++)
-                    {
-                        if (strstr(keywordsString[i], toSearch) != NULL)
-                        {
-                            keywordsCount[i]++;
-                        }
-                    }
-                    token = strtok(NULL, " ,.!?:;()&\n\r");
+                    printf("Dynamically allocate lyricsArray failed.\n");
+                    exit(1);
                 }
+                
+                pLyrics = fopen(songDirectory, "r");
+                if (pLyrics == NULL)
+                {
+                    printf("Error! - Can't read the lyrics file -> '%s'.\n", songName);
+                    exit(2);
+                }
+                
+                while (fgets(lyricsArray, fileSize+1, pLyrics) != NULL)
+                {
+                    token = strtok(lyricsArray, " ,.!?:;()&\n\r");
+                    while (token != NULL)
+                    {
+                        sprintf(toSearch, "|%s|", token);
+                        for (i=0; i<moodsCount; i++)
+                        {
+                            if (strstr(keywordsString[i], toSearch) != NULL)
+                            {
+                                keywordsCount[i]++;
+                            }
+                        }
+                        token = strtok(NULL, " ,.!?:;()&\n\r");
+                    }
+                }
+                moodAnalysis(keywordsCount, songName, fileName);
+                fclose(pLyrics);
+                songsCount++;
             }
-            moodAnalysis(keywordsCount, songName, fileName);
-            fclose(pLyrics);
-            songsCount++;
         }
     }
     printf("\n\t%d out of %d Songs have no mood.\n",songsNoMood,songsCount);

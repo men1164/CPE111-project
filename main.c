@@ -200,9 +200,13 @@ void displayAllSongsUI()
     i = 0;
     while(fgets(str,sizeof(stringInput),pSongLists) != NULL)
     {
-        sscanf(str, "%s %[^\n]",dummy, songsName[i]);
-        printf("%d : %s\n",i+1,songsName[i]);
-        i++;
+        /* for checking the empty line */
+        if (str[0] != '\n')
+        {
+            sscanf(str, "%s %[^\n]",dummy, songsName[i]);
+            printf("%d : %s\n",i+1,songsName[i]);
+            i++;
+        }
     }
     printf("\n\n");
     fclose(pSongLists);
