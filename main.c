@@ -98,7 +98,7 @@ void selectSongUI(int songsCount, char **songsName)
 {
     char stringInput[READ];
     char folder[64];
-    int inputSongNumber;
+    int inputSongNumber = -1;
     FILE * pLyrics = NULL;
     SONG_T *pResult = NULL;
     char decision[8];
@@ -106,6 +106,7 @@ void selectSongUI(int songsCount, char **songsName)
     
     while(1)
     {
+        inputSongNumber = -1;
         printf("Enter song number: ");
         fgets(stringInput,sizeof(stringInput),stdin);
         sscanf(stringInput,"%d",&inputSongNumber);
@@ -155,13 +156,27 @@ void selectSongUI(int songsCount, char **songsName)
 
             memset(stringInput, 0, sizeof(stringInput));
             memset(decision, 0, sizeof(decision));
-
-            printf("\nContinue looking other song? (Yes|No): ");
-            fgets(stringInput, sizeof(stringInput), stdin);
-            sscanf(stringInput, "%s",decision);
-            if (strcasecmp(decision, "No") == 0)
+            
+            while((strcasecmp(decision, "No") != 0)  && (strcasecmp(decision, "Yes") != 0))
             {
-                printf("\nBack to Main Menu\n");
+                memset(stringInput, 0, sizeof(stringInput));
+                memset(decision, 0, sizeof(decision));
+
+                printf("\nContinue looking other song? (Yes|No): ");
+                fgets(stringInput, sizeof(stringInput), stdin);
+                sscanf(stringInput, "%s",decision);
+                if (strcasecmp(decision, "No") == 0)
+                {
+                    printf("\nBack to Main Menu\n");
+                    break;
+                }
+                else if(strcasecmp(decision, "Yes") != 0)
+                {
+                    printf("\nPlease input only 'yes' or 'no'\n");
+                }
+            }
+            if(strcasecmp(decision, "No") == 0)
+            {
                 break;
             }
         }
@@ -333,36 +348,45 @@ void displayMoodUI()
         i++;
         countMood++;
     }
-    memset(read, 0, sizeof(read));
     
-    printf("Do you want to search songs by mood? (yes|no): ");
-    fgets(read, sizeof(read), stdin);
-    sscanf(read, "%s",decision);
-    if (strcasecmp(decision, "yes") == 0)
+    while((strcasecmp(decision, "No") != 0)  && (strcasecmp(decision, "Yes") != 0))
     {
-        while((moodChoice > countMood) || (moodChoice < 1))
+        memset(read, 0, sizeof(read));
+        memset(decision, 0, sizeof(decision));
+        printf("Do you want to search songs by mood? (yes|no): ");
+        fgets(read, sizeof(read), stdin);
+        sscanf(read, "%s",decision);
+        if (strcasecmp(decision, "yes") == 0)
         {
-            memset(read, 0, sizeof(read));
-            printf("Enter the number of mood that you want : ");
-            fgets(read, sizeof(read), stdin);
-            sscanf(read, "%d",&moodChoice);
-            if((moodChoice > countMood) || (moodChoice < 1))
+            while((moodChoice > countMood) || (moodChoice < 1))
             {
-                printf("\n");
-                printf("Warning! - Please input valid mood\n");
-                printf("\n");
-            }
-            else
-            {
-                printf("\n");
-                searchByMood(moodChoice-1);
-                printf("\n");
+                memset(read, 0, sizeof(read));
+                printf("Enter the number of mood that you want : ");
+                fgets(read, sizeof(read), stdin);
+                sscanf(read, "%d",&moodChoice);
+                if((moodChoice > countMood) || (moodChoice < 1))
+                {
+                    printf("\n");
+                    printf("Warning! - Please input valid mood\n");
+                    printf("\n");
+                }
+                else
+                {
+                   printf("\n");
+                   searchByMood(moodChoice-1);
+                   printf("\n");
+                }
             }
         }
-    }
-    else
-    {
-        printf("\nBack to Main Menu\n");
+        else if(strcasecmp(decision, "no") != 0)
+        {
+            printf("\nplease input only 'yes' or 'no'\n\n");
+        }
+        else
+        {
+            printf("\nBack to Main Menu\n");
+            break;
+        }
     }
     fclose(pMoodlist);
 }
@@ -387,6 +411,7 @@ int main(int argc, const char * argv[])
     
     while (1)
     {
+        choice = -1;
         printf("|Main Menu|\n");
         printf("\t1) Display all songs and lyrics.\n");
         printf("\t2) Display all moods and Search songs by mood.\n");
