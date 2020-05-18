@@ -26,10 +26,10 @@ void modifyMood()
         printf("======================================\n");
         printf("      What do you want to do?\n");
         printf("--------------------------------------\n");
-        printf("        1 - add mood\n");
-        printf("        2 - delete mood\n");
-        printf("        3 - adjust keyword\n");
-        printf("        4 - back to main menu\n");
+        printf("        1 - Add mood\n");
+        printf("        2 - Delete mood\n");
+        printf("        3 - Adjust keyword\n");
+        printf("        4 - Back to main menu\n");
         printf("  Ans: ");
         fgets(input, sizeof(input), stdin);
         sscanf(input, "%d", &ans);
