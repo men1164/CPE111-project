@@ -124,16 +124,17 @@ void searchByMood(int moodPosition)
  */
 void selectSongFromMood(int moodPosition, int songFoundInMood)
 {
-    SONG_ITEM_T *currentSong = listHead[moodPosition];
+    SONG_ITEM_T *currentSong = NULL;
     char read[READ];
     int choice;
-    int i = 1;
+    int i;
     char folder[64];
     FILE *pSong = NULL;
     
     while (1)
     {
         choice = 0;
+        i = 1;
         printf("Input the number of songs you want to display lyrics (-1 to exit): ");
         fgets(read, sizeof(read), stdin);
         sscanf(read, "%d",&choice);
@@ -150,6 +151,7 @@ void selectSongFromMood(int moodPosition, int songFoundInMood)
         }
         else
         {
+            currentSong = listHead[moodPosition];
             while (currentSong != NULL)
             {
                 if (i == choice)

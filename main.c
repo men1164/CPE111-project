@@ -1,7 +1,8 @@
 /*
  * Created by Krittin Srithong (Pong) 62070503402
  * Kittipol Neamprasertporn (Dome) 62070503404
- * and Thanasit Suwanposri (Men) 62070503414
+ * Thanasit Suwanposri (Men) 62070503414
+ * and Wagee Jr. Nanta Aree (Zor) 62070503445
  */
 
 #include <stdio.h>
@@ -175,22 +176,26 @@ void selectSongUI(int songsCount, char **songsName)
  */
 void displayAllSongsUI()
 {
-    char stringInput[128];
     char str[READ];
     char **songsName;
     char dummy[32];
-    int stringLenght = 64;
     int i;
     FILE * pSongLists = NULL;
     int songsCount = 0;
 
     pSongLists = fopen("Lyrics/songList.txt","r");
+    if (pSongLists == NULL)
+    {
+        printf("Eror! - Can't open the songList file.\n");
+        exit(2);
+    }
     songsCount = songsListCount();
+    songsCount++; /* for [0] terminator */
     songsName = (char **) calloc(songsCount, sizeof(char*));
     
     for (i=0; i<songsCount; i++)
     {
-        songsName[i] = (char *) calloc(stringLenght, sizeof(char));
+        songsName[i] = (char *) calloc(READ, sizeof(char));
     }
     
     printf("\n*************************************");
@@ -198,7 +203,7 @@ void displayAllSongsUI()
     printf("*************************************\n");
 
     i = 0;
-    while(fgets(str,sizeof(stringInput),pSongLists) != NULL)
+    while(fgets(str,sizeof(str),pSongLists) != NULL)
     {
         /* for checking the empty line */
         if (str[0] != '\n')
@@ -312,8 +317,8 @@ void displayMoodUI()
     char read[READ];
     char decision[8];
     int i = 1;
-    int moodChoice;
-    
+    int moodChoice = -1;
+    int countMood = 0;
     pMoodlist = fopen("Mood/moodList.txt", "r");
     if (pMoodlist == NULL)
     {
@@ -326,6 +331,7 @@ void displayMoodUI()
     {
         printf("%d: %s\n",i,read);
         i++;
+        countMood++;
     }
     memset(read, 0, sizeof(read));
     
@@ -334,13 +340,25 @@ void displayMoodUI()
     sscanf(read, "%s",decision);
     if (strcasecmp(decision, "yes") == 0)
     {
-        memset(read, 0, sizeof(read));
-        printf("Enter the number of mood that you want : ");
-        fgets(read, sizeof(read), stdin);
-        sscanf(read, "%d",&moodChoice);
-        printf("\n");
-        searchByMood(moodChoice-1);
-        printf("\n");
+        while((moodChoice > countMood) || (moodChoice < 1))
+        {
+            memset(read, 0, sizeof(read));
+            printf("Enter the number of mood that you want : ");
+            fgets(read, sizeof(read), stdin);
+            sscanf(read, "%d",&moodChoice);
+            if((moodChoice > countMood) || (moodChoice < 1))
+            {
+                printf("\n");
+                printf("Warning! - Please input valid mood\n");
+                printf("\n");
+            }
+            else
+            {
+                printf("\n");
+                searchByMood(moodChoice-1);
+                printf("\n");
+            }
+        }
     }
     else
     {
