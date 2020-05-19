@@ -299,7 +299,7 @@ void addNewSong()
     sscanf(stringInput,"%[^\n]",newSongName);
 
     memset(stringInput, 0, sizeof(stringInput));
-    printf("Enter the file name to hold '%s' lyrics (no spacebar or any special characters): ",newSongName);
+    printf("Enter the file name to hold '%s' lyrics \n (all lowercase, without '.txt' and no spacebar or any special characters): ",newSongName);
     fgets(stringInput, sizeof(stringInput), stdin);
     sscanf(stringInput, "%s",newFileName);
     

@@ -18,8 +18,8 @@
 #include "linkedListMood.h"
 
 char keywordsString[MAXMOODS][KEYWORDSLEN];     /* for combining all keywords each mmod */
-static int moodsCount = 0;                      /* count of all moods */
-static int songsCount;                          /* count of all songs */
+int moodsCount = 0;                             /* count of all moods */
+int songsCount;                                 /* count of all songs */
 int songsNoMood;                                /* count of song that have no mood */
 
 /*
