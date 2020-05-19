@@ -1,28 +1,24 @@
- Topic: Emotion-Based Song Recommender
- Group: Runtime Error
- 
- Done:
- - Analyse the mood each songs
- - Songs and moods sample dataset
- - Linked List of Mood
- - Search songs by Mood (Display songs name only)
- - Sorted Binary Tree of Songs
- - Display All songs (using traversal)
- - Modify mood and keyword.
- 
-
-Doing:
-- Search songs by title, user type the whole songs name (input exactly matched song name only)
+Topic: Emotion-Based Song Recommender
+Group: Runtime Error
 
 
-To Do:
-- Create the function for choose a songs to display lyrics from all the result list
-- Some Detail error checking (ex.user input wrong choice)
-- Thinking about particular matched in search songs by title.
+This is Emotion-Based Song Recommender program. The program will analysis the song's mood
+by its lyrics, comparing word by word with keyword in each mood.
 
 
-QUESTION & ISSUE:
-- How to do the particular searching songs by title using tree traversal? (Or you recommend to search directly from text file?)
-- (ISSUE) When user type the correct whole song's name in search songs by title, the traversal found only one song, 'Crying Over You'. The other songs not found, don't know why. How can I fix this?
-- (ISSUE) Can't free the tree when user finished modify mood for make the mood analysis again, got a core dumped. Don't know how to fix. When analysis again, song list wil be duplicate.
-- (ISSUE) Don't know how to do with the songs that no moods (some songs in sample data can't analyse mood because found keywords of each mood less than 5 words)
+HOW TO USE the program.
+
+1. Run the program, the program will show list of songs that have no mood.
+2. Select function that you want to do with the program.
+
+   Here are the capabilities of the program
+	- Display all song lists and User can select the song to display the lyrics.
+	- Display all mood lists and User can search song by mood, user also can
+	  select any result song to see its lyrics.
+	- User are allowed to add a new song.
+	- User are allowed to modify mood, add/delete mood, also add/delete keywords in
+	  each mood. Maximum mood is 10.
+
+
+MISSING capabilities
+ - User can't delete the song
