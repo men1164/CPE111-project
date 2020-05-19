@@ -17,7 +17,7 @@ all : $(EXECUTABLES)
 main.o :	main.c analyzeMood.h sortedBinaryTree.h linkedListMood.h
 	gcc -c main.c
 
-analyzeMood.o : analyzeMood.c analyzeMood.h sortedBinaryTree.h
+analyzeMood.o : analyzeMood.c analyzeMood.h sortedBinaryTree.h linkedListMood.h
 	gcc -c analyzeMood.c
 
 sortedBinaryTree.o :	sortedBinaryTree.c sortedBinaryTree.h analyzeMood.h
@@ -32,6 +32,6 @@ modifyMood.o :	modifyMood.c modifyMood.h analyzeMood.h
 main$(EXECEXT) : main.o analyzeMood.o sortedBinaryTree.o linkedListMood.o modifyMood.o
 	gcc -o main$(EXECEXT) main.o analyzeMood.o sortedBinaryTree.o linkedListMood.o modifyMood.o
 
-clean : 
+clean	: 
 	-rm *.o
 	-rm $(EXECUTABLES) 

@@ -111,7 +111,7 @@ pray.txt Pray
 lookwhatyoumademedo.txt Look What You Made Me Do
 thunder.txt Thunder
 toogoodatgoodbyes.txt Too Good At Goodbyes
-duskTilldawn.txt Dusk Till Dawn
+dusktilldawn.txt Dusk Till Dawn
 youdontknowlove.txt You Don't Know Love
 yearsyears.txt Years & Years
 growup.txt Grow Up

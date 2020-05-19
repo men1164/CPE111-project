@@ -1,7 +1,8 @@
 /*
  * Created by Thanasit Suwanposri (Men) 62070503414
  *
- * This file is use for lyrics analysis.
+ * This file is use for lyrics analysis. Cut lyrics to word by word and compare
+ * with each keyword in each mood.
  */
 
 
