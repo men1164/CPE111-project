@@ -212,11 +212,13 @@ void combineKeywords()
     fclose(pMoodlist);
 }
 
+/* return mood count */
 int moodsItemCount()
 {
     return moodsCount;
 }
 
+/* return song count */
 int songsListCount()
 {
     return songsCount;

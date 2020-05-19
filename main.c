@@ -111,7 +111,7 @@ void selectSongUI(int songsCount, char **songsName)
         fgets(stringInput,sizeof(stringInput),stdin);
         sscanf(stringInput,"%d",&inputSongNumber);
         
-        if((inputSongNumber > songsCount) || (inputSongNumber <= 0))
+        if((inputSongNumber > songsCount-1) || (inputSongNumber <= 0))
         {
             printf("You entered the invalid song number.\n");
         }
@@ -367,7 +367,7 @@ void displayMoodUI()
                 if((moodChoice > countMood) || (moodChoice < 1))
                 {
                     printf("\n");
-                    printf("Warning! - Please input valid mood\n");
+                    printf("Please input valid mood.\n");
                     printf("\n");
                 }
                 else

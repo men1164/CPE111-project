@@ -101,16 +101,26 @@ void searchByMood(int moodPosition)
         }
     }
     
-    printf("\nDo you want to choose the songs to display the lyrics? (Yes|No): ");
-    fgets(read, sizeof(read), stdin);
-    sscanf(read, "%s",decision);
-    if (strcasecmp("Yes", decision) == 0)
+    while((strcasecmp("Yes", decision) != 0) && (strcasecmp("No", decision) != 0))
     {
-        selectSongFromMood(moodPosition,i);
-    }
-    else
-    {
-        printf("\nBack to Main Menu.\n");
+        memset(read,0,sizeof(read));
+        memset(decision,0,sizeof(decision));
+        printf("\nDo you want to choose the songs to display the lyrics? (Yes|No): ");
+        fgets(read, sizeof(read), stdin);
+        sscanf(read, "%s",decision);
+        if (strcasecmp("Yes", decision) == 0)
+        {
+            selectSongFromMood(moodPosition,i);
+        }
+        else if (strcasecmp("No", decision) != 0)
+        {
+            printf("\nPlease input only 'yes' or 'no'\n");
+        }
+        else
+        {
+            printf("\nBack to Main Menu.\n");
+            break;
+        }
     }
 }
 
