@@ -3,7 +3,7 @@ Group: Runtime Error
 - Krittin Srithong
 - Kittipol Neamprasertporn
 - Thanasit Suwanposri
-- Wajee Jr. Nanta-Aree
+- Wagee Jr. Nanta-Aree
 
 ## Description
 This is Emotion-Based Song Recommender program. The program will analysis the song's mood by its lyrics, comparing word by word with keyword in each mood.
