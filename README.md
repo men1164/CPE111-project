@@ -1,6 +1,7 @@
 # Topic: Emotion-Based Song Recommender
 Group: Runtime Error
 - Krittin Srithong
+- Kittipol Neamprasertporn
 - Thanasit Suwanposri
 - Wajee Jr. Nanta-Aree
 
