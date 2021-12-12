@@ -9,16 +9,16 @@ This is Emotion-Based Song Recommender program. The program will analysis the so
 
 ### Run and Use the program.
 1. Clone this repository into your computer. Go to project's directory.
-```console
+```zsh
 cd CPE111-project
 ```
 
 2. Compile the project
-```console
+```zsh
 make
 ```
 3. Run the program, the program will show list of songs that cannot analyze its mood.
-```console
+```zsh
 ./main
 ```
 4. Select function that you want to do with the program.
